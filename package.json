@@ -1,0 +1,21 @@
+{
+  "name": "absence-bot",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "chrono-node": "^2.7.5",
+    "date-fns": "^3.6.0",
+    "slack-edge": "^0.12.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240423.0",
+    "typescript": "^5.4.5",
+    "vitest": "^1.5.2",
+    "wrangler": "3.52.0"
+  }
+}
