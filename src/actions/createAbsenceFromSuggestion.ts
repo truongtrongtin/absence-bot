@@ -8,7 +8,7 @@ import { DayPart } from "../types";
 export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   "button",
   Env
-> = async ({ context, payload, body, env }) => {
+> = async ({ context, payload, env }) => {
   if (!payload.channel || !payload.message) return;
   const {
     targetUserId,
@@ -17,7 +17,7 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
     dayPart,
     reason,
     showReason,
-  } = JSON.parse(body.value);
+  } = JSON.parse(payload.actions[0].value);
   const actionUserId = payload.user.id;
   const channelId = payload.channel.id;
   const threadTs = payload.message.ts;

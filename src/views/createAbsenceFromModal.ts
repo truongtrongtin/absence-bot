@@ -160,7 +160,6 @@ export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
 
 export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
   payload,
-  body,
   context,
   env,
 }) => {
