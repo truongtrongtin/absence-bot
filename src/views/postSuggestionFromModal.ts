@@ -214,6 +214,7 @@ export const postSuggestionFromModal: ViewSubmissionLazyHandler<Env> = async ({
               emoji: true,
               text: "No, submit myself",
             },
+            value: JSON.stringify(absencePayload),
           },
         ],
       },

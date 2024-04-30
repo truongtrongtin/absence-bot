@@ -209,10 +209,11 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
   const summary = `${targetUserName} ${dayPartText}`;
   const timeText = generateTimeText(startDate, endDate, dayPart);
   const trimmedReason = reason.trim();
+  const messageText = trimmedReason ? ` Reason: ${reason}` : "";
 
   const newMessage = await context.client.chat.postMessage({
     channel: env.SLACK_CHANNEL,
-    text: `<@${targetUserId}> will be absent *${timeText}*.`,
+    text: `<@${targetUserId}> will be absent *${timeText}*.${messageText}`,
   });
 
   // Create new event on google calendar

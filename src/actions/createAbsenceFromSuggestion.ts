@@ -10,14 +10,8 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   Env
 > = async ({ context, payload, env }) => {
   if (!payload.channel || !payload.message) return;
-  const {
-    targetUserId,
-    startDateString,
-    endDateString,
-    dayPart,
-    reason,
-    showReason,
-  } = JSON.parse(payload.actions[0].value);
+  const { targetUserId, startDateString, endDateString, dayPart, reason } =
+    JSON.parse(payload.actions[0].value);
   const actionUserId = payload.user.id;
   const channelId = payload.channel.id;
   const threadTs = payload.message.ts;
@@ -54,13 +48,11 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   const summary = `${targetUserName} ${dayPartText}`;
   const timeText = generateTimeText(startDate, endDate, dayPart);
   const trimmedReason = reason.trim();
-  const messageText =
-    showReason === "true" && trimmedReason ? ` Reason: ${reason}` : "";
 
   const newMessage = await context.client.chat.postMessage({
     channel: channelId,
-    text: `<@${targetUserId}> will be absent *${timeText}*.${messageText}`,
-    ...(threadTs ? { thread_ts: threadTs } : {}),
+    thread_ts: threadTs,
+    text: `<@${targetUserId}> will be absent *${timeText}*.`,
   });
 
   // Create new event on google calendar
