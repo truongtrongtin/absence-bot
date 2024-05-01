@@ -3,121 +3,107 @@ import {
   ViewSubmissionAckHandler,
   ViewSubmissionLazyHandler,
 } from "slack-edge";
-import { findMemberById, generateTimeText, isWeekendInRange } from "../helpers";
+import { generateTimeText, isWeekendInRange } from "../helpers";
 import { Env } from "../index";
 import { AbsencePayload, DayPart } from "../types";
 
-export const postSuggestionFromModalAckHandler: ViewSubmissionAckHandler =
-  async ({ payload }) => {
-    const view = payload.view;
-    const startDateString =
-      view.state.values["start-date-block"]["start-date-action"].selected_date;
+export const postSuggestionFromModalAckHandler: ViewSubmissionAckHandler<
+  Env
+> = async ({ payload }) => {
+  const view = payload.view;
+  const startDateString =
+    view.state.values["start-date-block"]["start-date-action"].selected_date;
 
-    if (!startDateString) {
+  if (!startDateString) {
+    return {
+      response_action: "errors",
+      errors: {
+        "start-date-block": "Start date is required",
+        "end-date-block": "",
+        "day-part-block": "",
+      },
+    };
+  }
+
+  const endDateString =
+    view.state.values["end-date-block"]["end-date-action"].selected_date ||
+    startDateString;
+  const dayPart = view.state.values["day-part-block"]["day-part-action"]
+    .selected_option?.value as DayPart;
+
+  const isSingleMode = startDateString === endDateString;
+  const startDate = new Date(startDateString);
+  const endDate = new Date(endDateString);
+  const today = startOfDay(new Date());
+
+  if (isWeekendInRange(startDate, endDate)) {
+    if (isSingleMode) {
       return {
         response_action: "errors",
         errors: {
-          "start-date-block": "Start date is required",
+          "start-date-block": "Not allow weekend",
           "end-date-block": "",
           "day-part-block": "",
         },
       };
-    }
-
-    const endDateString =
-      view.state.values["end-date-block"]["end-date-action"].selected_date ||
-      startDateString;
-    const dayPart = view.state.values["day-part-block"]["day-part-action"]
-      .selected_option?.value as DayPart;
-
-    const { targetUserId } = JSON.parse(view.private_metadata);
-    console.log("targetUserId", targetUserId);
-    const isSingleMode = startDateString === endDateString;
-    const startDate = new Date(startDateString);
-    const endDate = new Date(endDateString);
-    const today = startOfDay(new Date());
-
-    const actionUserId = payload.user.id;
-    const actionUser = findMemberById(actionUserId);
-    if (!actionUser) throw Error("action user not found");
-    const actionUserName = actionUser.name;
-
-    const targetUser = findMemberById(targetUserId);
-    if (!targetUser) throw Error("member not found");
-    const targetUserName = targetUser.name;
-
-    console.log(
-      `admin ${actionUserName} is submiting suggestion for ${targetUserName}`
-    );
-
-    if (isWeekendInRange(startDate, endDate)) {
-      if (isSingleMode) {
-        return {
-          response_action: "errors",
-          errors: {
-            "start-date-block": "Not allow weekend",
-            "end-date-block": "",
-            "day-part-block": "",
-          },
-        };
-      } else {
-        return {
-          response_action: "errors",
-          errors: {
-            "start-date-block": "Not allow weekend in range",
-            "end-date-block": "Not allow weekend in range",
-            "day-part-block": "",
-          },
-        };
-      }
-    }
-
-    if (endDate < startDate) {
+    } else {
       return {
         response_action: "errors",
         errors: {
-          "start-date-block": "",
-          "end-date-block": "Must not be earlier than start date",
+          "start-date-block": "Not allow weekend in range",
+          "end-date-block": "Not allow weekend in range",
           "day-part-block": "",
         },
       };
     }
+  }
 
-    if (startDate > addYears(today, 1)) {
-      return {
-        response_action: "errors",
-        errors: {
-          "start-date-block": "Must not be later than 1 year from now",
-          "end-date-block": "",
-          "day-part-block": "",
-        },
-      };
-    }
+  if (endDate < startDate) {
+    return {
+      response_action: "errors",
+      errors: {
+        "start-date-block": "",
+        "end-date-block": "Must not be earlier than start date",
+        "day-part-block": "",
+      },
+    };
+  }
 
-    if (endDate > addYears(today, 1)) {
-      return {
-        response_action: "errors",
-        errors: {
-          "start-date-block": "",
-          "end-date-block": "Must not be later than 1 year from now",
-          "day-part-block": "",
-        },
-      };
-    }
+  if (startDate > addYears(today, 1)) {
+    return {
+      response_action: "errors",
+      errors: {
+        "start-date-block": "Must not be later than 1 year from now",
+        "end-date-block": "",
+        "day-part-block": "",
+      },
+    };
+  }
 
-    if (!isSingleMode && dayPart !== DayPart.FULL) {
-      return {
-        response_action: "errors",
-        errors: {
-          "start-date-block": "",
-          "end-date-block": "",
-          "day-part-block": "This option is not supported in multi-date mode",
-        },
-      };
-    }
+  if (endDate > addYears(today, 1)) {
+    return {
+      response_action: "errors",
+      errors: {
+        "start-date-block": "",
+        "end-date-block": "Must not be later than 1 year from now",
+        "day-part-block": "",
+      },
+    };
+  }
 
-    return { response_action: "clear" };
-  };
+  if (!isSingleMode && dayPart !== DayPart.FULL) {
+    return {
+      response_action: "errors",
+      errors: {
+        "start-date-block": "",
+        "end-date-block": "",
+        "day-part-block": "This option is not supported in multi-date mode",
+      },
+    };
+  }
+
+  return { response_action: "clear" };
+};
 
 export const postSuggestionFromModal: ViewSubmissionLazyHandler<Env> = async ({
   payload,
@@ -138,18 +124,6 @@ export const postSuggestionFromModal: ViewSubmissionLazyHandler<Env> = async ({
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
 
-  const actionUserId = payload.user.id;
-  const actionUser = findMemberById(actionUserId);
-  if (!actionUser) throw Error("action user not found");
-  const actionUserName = actionUser.name;
-
-  const targetUser = findMemberById(targetUserId);
-  if (!targetUser) throw Error("member not found");
-  const targetUserName = targetUser.name;
-
-  console.log(
-    `admin ${actionUserName} is submiting suggestion for ${targetUserName}`
-  );
   const absencePayload: AbsencePayload = {
     startDateString,
     endDateString,
@@ -158,7 +132,7 @@ export const postSuggestionFromModal: ViewSubmissionLazyHandler<Env> = async ({
     targetUserId,
   };
   const timeText = generateTimeText(startDate, endDate, dayPart);
-  const text = `<@${targetUser.id}>, are you going to be absent *${timeText}*?`;
+  const text = `<@${targetUserId}>, are you going to be absent *${timeText}*?`;
   const quote = reason
     .split("\n")
     .map((text: string) => `>${text}`)

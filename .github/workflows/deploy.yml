@@ -25,6 +25,7 @@ jobs:
             GOOGLE_CLIENT_SECRET
             GOOGLE_REFRESH_TOKEN
             GOOGLE_API_KEY
+            MEMBER_LIST_JSON
         env:
           SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -35,3 +36,4 @@ jobs:
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          MEMBER_LIST_JSON: ${{ secrets.MEMBER_LIST_JSON }}

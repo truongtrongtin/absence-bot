@@ -1,14 +1,8 @@
 import { format } from "date-fns";
-import { findMemberById } from "../helpers";
-import { AnyDescriptionOption, ModalView, ViewInputBlock } from "slack-edge";
+import { AnyDescriptionOption, ModalView } from "slack-edge";
 import { AbsencePayload, DayPart } from "../types";
 
-export function createAbsenceView(
-  actionUserId: string,
-  absencePayload?: AbsencePayload
-): ModalView {
-  const foundMember = findMemberById(actionUserId)!;
-  const isAdmin = foundMember.admin;
+export function createAbsenceView(absencePayload?: AbsencePayload): ModalView {
   const isSingleMode =
     absencePayload?.startDateString === absencePayload?.endDateString;
 
@@ -59,29 +53,6 @@ export function createAbsenceView(
       emoji: true,
     },
     blocks: [
-      ...(isAdmin
-        ? [
-            {
-              type: "input",
-              block_id: "member-block",
-              element: {
-                type: "users_select",
-                action_id: "member-action",
-                initial_user: absencePayload?.targetUserId || actionUserId,
-                placeholder: {
-                  type: "plain_text",
-                  text: "Select a member",
-                  emoji: true,
-                },
-              },
-              label: {
-                type: "plain_text",
-                text: "Assign to",
-                emoji: true,
-              },
-            } as ViewInputBlock,
-          ]
-        : []),
       {
         type: "input",
         block_id: "start-date-block",

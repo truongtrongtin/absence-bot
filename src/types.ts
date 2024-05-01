@@ -1,14 +1,13 @@
 export enum DayPart {
-  FULL = 'full',
-  MORNING = 'morning',
-  AFTERNOON = 'afternoon',
+  FULL = "full",
+  MORNING = "morning",
+  AFTERNOON = "afternoon",
 }
 
 export type Member = {
   id: string;
   email: string;
   name: string;
-  admin?: boolean;
 };
 
 export type CalendarEvent = {

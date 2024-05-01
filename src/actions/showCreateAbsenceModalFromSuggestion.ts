@@ -12,6 +12,6 @@ export const showCreateAbsenceModalFromSuggestion: BlockActionLazyHandler<
     : undefined;
   await context.client.views.open({
     trigger_id: payload.trigger_id,
-    view: createAbsenceView(payload.user.id, absencePayload),
+    view: createAbsenceView(absencePayload),
   });
 };

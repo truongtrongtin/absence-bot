@@ -15,15 +15,10 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   const actionUserId = payload.user.id;
   const channelId = payload.channel.id;
   const threadTs = payload.message.ts;
-
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-  const actionUser = findMemberById(actionUserId);
-  if (!actionUser) throw Error("action user not found");
-  const actionUserName = actionUser.name;
-  const isAdmin = actionUser.admin;
 
-  if (targetUserId !== actionUserId && !isAdmin) {
+  if (targetUserId !== actionUserId) {
     await context.client.chat.postEphemeral({
       channel: channelId,
       user: actionUserId,
@@ -31,17 +26,10 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
     });
   }
 
-  const targetUser = findMemberById(targetUserId);
+  const members = JSON.parse(env.MEMBER_LIST_JSON);
+  const targetUser = findMemberById({ members, id: targetUserId });
   if (!targetUser) throw Error("target user not found");
   const targetUserName = targetUser.name;
-
-  if (!isAdmin && actionUser.id === targetUser.id) {
-    console.log(`${actionUserName} is submiting absence`);
-  } else {
-    console.log(
-      `admin ${actionUserName} is submiting absence for ${targetUserName}`
-    );
-  }
 
   const accessToken = await getAccessTokenFromRefreshToken({ env });
   const dayPartText = dayPart === DayPart.FULL ? "(off)" : `(off ${dayPart})`;

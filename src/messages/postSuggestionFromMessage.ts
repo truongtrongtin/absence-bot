@@ -68,9 +68,6 @@ export const postSuggestionFromMessage: EventLazyHandler<
     const startDate = range.start.date();
     const endDate = range.end ? range.end.date() : startDate;
 
-    console.log("startDate", startDate.toLocaleString());
-    console.log("endDate", endDate.toLocaleString());
-
     // ignore duplicated range
     const hash =
       startDate.toDateString() +

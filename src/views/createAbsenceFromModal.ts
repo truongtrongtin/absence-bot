@@ -17,7 +17,6 @@ export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
       return {
         response_action: "errors",
         errors: {
-          member_block: "",
           "start-date-block": "Start date is required",
           "end-date-block": "",
           "day-part-block": "",
@@ -35,60 +34,11 @@ export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
     const endDate = new Date(endDateString);
     const today = startOfDay(new Date());
 
-    const actionUserId = payload.user.id;
-    const actionUser = findMemberById(actionUserId);
-    if (!actionUser) throw Error("action user not found");
-    const actionUserName = actionUser.name;
-    const isAdmin = actionUser.admin;
-
-    const targetUserId =
-      view.state.values?.["member-block"]?.["member-action"]?.selected_user ||
-      "";
-
-    let targetUser = actionUser;
-    if (isAdmin) {
-      if (!targetUserId) {
-        return {
-          response_action: "errors",
-          errors: {
-            member_block: "Member is required",
-            "start-date-block": "",
-            "end-date-block": "",
-            "day-part-block": "",
-          },
-        };
-      }
-      const foundUser = findMemberById(targetUserId);
-      if (!foundUser) throw Error("target user not found");
-      targetUser = foundUser;
-    }
-    const targetUserName = targetUser.name;
-    if (!isAdmin && actionUser.id === targetUser.id) {
-      console.log(`${actionUserName} is submiting absence`);
-    } else {
-      console.log(
-        `admin ${actionUserName} is submiting absence for ${targetUserName}`
-      );
-    }
-
-    if (!isAdmin && startDate < today) {
-      return {
-        response_action: "errors",
-        errors: {
-          member_block: "",
-          "start-date-block": "Not allow day in the past",
-          "end-date-block": "",
-          "day-part-block": "",
-        },
-      };
-    }
-
     if (isWeekendInRange(startDate, endDate)) {
       if (isSingleMode) {
         return {
           response_action: "errors",
           errors: {
-            member_block: "",
             "start-date-block": "Not allow weekend",
             "end-date-block": "",
             "day-part-block": "",
@@ -98,7 +48,6 @@ export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
         return {
           response_action: "errors",
           errors: {
-            member_block: "",
             "start-date-block": "Not allow weekend in range",
             "end-date-block": "Not allow weekend in range",
             "day-part-block": "",
@@ -111,7 +60,6 @@ export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
       return {
         response_action: "errors",
         errors: {
-          member_block: "",
           "start-date-block": "",
           "end-date-block": "Must not be earlier than start date",
           "day-part-block": "",
@@ -123,7 +71,6 @@ export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
       return {
         response_action: "errors",
         errors: {
-          member_block: "",
           "start-date-block": "Must not be later than 1 year from now",
           "end-date-block": "",
           "day-part-block": "",
@@ -135,7 +82,6 @@ export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
       return {
         response_action: "errors",
         errors: {
-          member_block: "",
           "start-date-block": "",
           "end-date-block": "Must not be later than 1 year from now",
           "day-part-block": "",
@@ -147,7 +93,6 @@ export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
       return {
         response_action: "errors",
         errors: {
-          member_block: "",
           "start-date-block": "",
           "end-date-block": "",
           "day-part-block": "This option is not supported in multi-date mode",
@@ -165,8 +110,7 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
 }) => {
   const view = payload.view;
   const actionUserId = payload.user.id;
-  const targetUserId =
-    view.state.values?.["member-block"]?.["member-action"]?.selected_user || "";
+  const targetUserId = actionUserId;
   const startDateString =
     view.state.values["start-date-block"]["start-date-action"].selected_date;
   if (!startDateString) return;
@@ -178,31 +122,11 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
   const reason = view.state.values["reason-block"]["reason-action"].value || "";
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-  const actionUser = findMemberById(actionUserId);
-  if (!actionUser) throw Error("action user not found");
-  const actionUserName = actionUser.name;
-  const isAdmin = actionUser.admin;
+  const members = JSON.parse(env.MEMBER_LIST_JSON);
 
-  if (targetUserId !== actionUserId && !isAdmin) {
-    await context.client.chat.postEphemeral({
-      channel: env.SLACK_CHANNEL,
-      user: actionUserId,
-      text: ":x: You are not authorized to perform this action!",
-    });
-    return;
-  }
-
-  const targetUser = findMemberById(targetUserId);
+  const targetUser = findMemberById({ members, id: actionUserId });
   if (!targetUser) throw Error("target user not found");
   const targetUserName = targetUser.name;
-
-  if (!isAdmin && actionUser.id === targetUser.id) {
-    console.log(`${actionUserName} is submiting absence`);
-  } else {
-    console.log(
-      `admin ${actionUserName} is submiting absence for ${targetUserName}`
-    );
-  }
 
   const accessToken = await getAccessTokenFromRefreshToken({ env });
   const dayPartText = dayPart === DayPart.FULL ? "(off)" : `(off ${dayPart})`;

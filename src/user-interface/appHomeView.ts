@@ -1,17 +1,13 @@
 import { subDays } from "date-fns";
 import { DividerBlock, HomeTabView, SectionBlock } from "slack-edge";
 import {
-  findMemberById,
   generateTimeText,
   getDayPartFromEventSummary,
   getMemberNameFromEventSummary,
 } from "../helpers";
-import { CalendarEvent } from "../types";
+import { CalendarEvent, Member } from "../types";
 
-export function appHomeView(
-  absenceEvents: CalendarEvent[],
-  userId: string
-): HomeTabView {
+export function appHomeView(absenceEvents: CalendarEvent[]): HomeTabView {
   return {
     type: "home",
     blocks: [
@@ -68,10 +64,6 @@ export function appHomeView(
         (results: (SectionBlock | DividerBlock)[], event: CalendarEvent) => {
           const dayPart = getDayPartFromEventSummary(event.summary);
           const memberName = getMemberNameFromEventSummary(event.summary);
-          const foundMember = findMemberById(userId);
-          if (!foundMember) throw Error("member not found");
-          const isBelongToMe = memberName === foundMember.name;
-          const isAdmin = foundMember.admin;
           const timeText = generateTimeText(
             new Date(event.start.date),
             subDays(new Date(event.end.date), 1),
@@ -86,32 +78,6 @@ export function appHomeView(
               text: `*${memberName}*\n${timeText}`,
               verbatim: true,
             },
-            ...((isAdmin || isBelongToMe) && {
-              accessory: {
-                type: "button",
-                action_id: "app-home-absence-delete",
-                text: {
-                  type: "plain_text",
-                  text: "Delete",
-                  emoji: true,
-                },
-                style: "danger",
-                confirm: {
-                  title: {
-                    type: "plain_text",
-                    text: "Delete absence",
-                    emoji: true,
-                  },
-                  text: {
-                    type: "mrkdwn",
-                    text: `Are you sure you want to delete this absence? This cannot be undone.`,
-                    verbatim: true,
-                  },
-                  confirm: { type: "plain_text", text: "Delete", emoji: true },
-                  style: "danger",
-                },
-              },
-            }),
             accessory: {
               type: "button",
               action_id: "app-home-absence-delete",
@@ -136,10 +102,10 @@ export function appHomeView(
                 style: "danger",
               },
             },
-          }),
-            results.push({
-              type: "divider",
-            });
+          });
+          results.push({
+            type: "divider",
+          });
 
           return results;
         },

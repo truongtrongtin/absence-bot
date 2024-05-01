@@ -54,13 +54,12 @@ export function isWeekendInRange(startDate: Date, endDate: Date) {
   return false;
 }
 
-export function findMemberById(id: string) {
-  return [
-    {
-      id: "U03DKD4GFLM",
-      email: "truongtrongtin0305@gmail.com",
-      name: "Tin",
-      admin: true,
-    },
-  ].find((member) => member.id === id);
+export function findMemberById({
+  members,
+  id,
+}: {
+  members: Member[];
+  id: string;
+}) {
+  return members.find((member) => member.id === id);
 }
