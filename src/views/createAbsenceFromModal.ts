@@ -119,11 +119,23 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
     startDateString;
   const dayPart = view.state.values["day-part-block"]["day-part-action"]
     .selected_option?.value as DayPart;
-  const reason = view.state.values["reason-block"]["reason-action"].value || "";
+  const isSingleMode = startDateString === endDateString;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-  const members = JSON.parse(env.MEMBER_LIST_JSON);
+  const today = startOfDay(new Date());
 
+  if (
+    endDate < startDate ||
+    (!isSingleMode && dayPart !== DayPart.FULL) ||
+    isWeekendInRange(startDate, endDate) ||
+    startDate > addYears(today, 1) ||
+    endDate > addYears(today, 1)
+  ) {
+    return;
+  }
+
+  const reason = view.state.values["reason-block"]["reason-action"].value || "";
+  const members = JSON.parse(env.MEMBER_LIST_JSON);
   const targetUser = findMemberById({ members, id: actionUserId });
   if (!targetUser) throw Error("target user not found");
   const targetUserName = targetUser.name;

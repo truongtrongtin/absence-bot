@@ -119,11 +119,22 @@ export const postSuggestionFromModal: ViewSubmissionLazyHandler<Env> = async ({
     startDateString;
   const dayPart = view.state.values["day-part-block"]["day-part-action"]
     .selected_option?.value as DayPart;
-
-  const { targetUserId, reason, messageTs } = JSON.parse(view.private_metadata);
+  const isSingleMode = startDateString === endDateString;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
+  const today = startOfDay(new Date());
 
+  if (
+    endDate < startDate ||
+    (!isSingleMode && dayPart !== DayPart.FULL) ||
+    isWeekendInRange(startDate, endDate) ||
+    startDate > addYears(today, 1) ||
+    endDate > addYears(today, 1)
+  ) {
+    return;
+  }
+
+  const { targetUserId, reason, messageTs } = JSON.parse(view.private_metadata);
   const absencePayload: AbsencePayload = {
     startDateString,
     endDateString,
