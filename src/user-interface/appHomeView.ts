@@ -72,7 +72,6 @@ export function appHomeView(absenceEvents: CalendarEvent[]): HomeTabView {
 
           results.push({
             type: "section",
-            block_id: event.id,
             text: {
               type: "mrkdwn",
               text: `*${memberName}*\n${timeText}`,
@@ -87,6 +86,10 @@ export function appHomeView(absenceEvents: CalendarEvent[]): HomeTabView {
                 emoji: true,
               },
               style: "danger",
+              value: JSON.stringify({
+                eventId: event.id,
+                email: event.attendees[0].email,
+              }),
               confirm: {
                 title: {
                   type: "plain_text",

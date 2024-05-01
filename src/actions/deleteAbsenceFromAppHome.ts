@@ -3,12 +3,41 @@ import { BlockActionLazyHandler } from "slack-edge";
 import { Env } from "../index";
 import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
 import { CalendarEvent, CalendarListResponse } from "../types";
+import { findMemberById } from "../helpers";
 
 export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
   "button",
   Env
 > = async ({ context, payload, env }) => {
-  const eventId = payload.actions[0].block_id;
+  const { eventId, email } = JSON.parse(payload.actions[0].value);
+  const members = JSON.parse(env.MEMBER_LIST_JSON);
+  const actionUser = findMemberById({ members, id: payload.user.id });
+  if (!actionUser || actionUser.email !== email) {
+    await context.client.views.open({
+      trigger_id: payload.trigger_id,
+      view: {
+        type: "modal",
+        title: {
+          type: "plain_text",
+          text: "Unauthorized!",
+        },
+        close: {
+          type: "plain_text",
+          text: "Close",
+        },
+        blocks: [
+          {
+            type: "section",
+            text: {
+              type: "plain_text",
+              text: "You are not authorized to perform this action!",
+            },
+          },
+        ],
+      },
+    });
+    return;
+  }
   const accessToken = await getAccessTokenFromRefreshToken({ env });
 
   // Get absence event from google calendar

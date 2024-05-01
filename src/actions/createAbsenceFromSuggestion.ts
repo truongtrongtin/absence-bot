@@ -9,23 +9,42 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   "button",
   Env
 > = async ({ context, payload, env }) => {
-  if (!payload.channel || !payload.message) return;
   const { targetUserId, startDateString, endDateString, dayPart, reason } =
     JSON.parse(payload.actions[0].value);
   const actionUserId = payload.user.id;
+
+  if (targetUserId !== actionUserId) {
+    await context.client.views.open({
+      trigger_id: payload.trigger_id,
+      view: {
+        type: "modal",
+        title: {
+          type: "plain_text",
+          text: "Unauthorized!",
+        },
+        close: {
+          type: "plain_text",
+          text: "Close",
+        },
+        blocks: [
+          {
+            type: "section",
+            text: {
+              type: "plain_text",
+              text: "You are not authorized to perform this action!",
+            },
+          },
+        ],
+      },
+    });
+    return;
+  }
+
+  if (!payload.channel || !payload.message) return;
   const channelId = payload.channel.id;
   const threadTs = payload.message.ts;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-
-  if (targetUserId !== actionUserId) {
-    await context.client.chat.postEphemeral({
-      channel: channelId,
-      user: actionUserId,
-      text: ":x: You are not authorized to perform this action!",
-    });
-  }
-
   const members = JSON.parse(env.MEMBER_LIST_JSON);
   const targetUser = findMemberById({ members, id: targetUserId });
   if (!targetUser) throw Error("target user not found");

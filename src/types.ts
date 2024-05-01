@@ -22,6 +22,7 @@ export type CalendarEvent = {
   extendedProperties: {
     private: Record<string, string>;
   };
+  attendees: { email: string }[];
 };
 
 export type CalendarListResponse = {
