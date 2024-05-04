@@ -40,7 +40,7 @@ export function createAbsenceView(absencePayload?: AbsencePayload): ModalView {
     // private_metadata: privateMetadata,
     title: {
       type: "plain_text",
-      text: "Absence registration",
+      text: "New Absence",
     },
     submit: {
       type: "plain_text",

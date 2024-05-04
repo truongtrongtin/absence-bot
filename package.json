@@ -13,9 +13,9 @@
     "slack-edge": "^0.12.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240423.0",
+    "@cloudflare/workers-types": "^4.20240502.0",
     "typescript": "^5.4.5",
-    "vitest": "^1.5.2",
-    "wrangler": "3.52.0"
+    "vitest": "^1.6.0",
+    "wrangler": "3.53.1"
   }
 }

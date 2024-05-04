@@ -1,6 +1,11 @@
 import { SlackApp, SlackAppLogLevel } from "slack-edge";
+import { backToHome } from "./actions/backToHome";
 import { createAbsenceFromSuggestion } from "./actions/createAbsenceFromSuggestion";
 import { deleteAbsenceFromAppHome } from "./actions/deleteAbsenceFromAppHome";
+import {
+  showAbsenceList,
+  showAbsenceListAckHandler,
+} from "./actions/showAbsenceList";
 import { showCreateAbsenceModalFromSuggestion } from "./actions/showCreateAbsenceModalFromSuggestion";
 import { appHomeOpened } from "./events/appHomeOpened";
 import { memberJoinedChannel } from "./events/memberJoinedChannel";
@@ -53,6 +58,8 @@ export default {
         noopAckHandler,
         createAbsenceFromSuggestion
       )
+      .action("view-all-absences", showAbsenceListAckHandler, showAbsenceList)
+      .action("back-to-home", noopAckHandler, backToHome)
       .globalShortcut(
         "global_new_absence",
         noopAckHandler,

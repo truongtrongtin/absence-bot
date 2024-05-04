@@ -1,24 +1,9 @@
-import { subDays } from "date-fns";
-import { DividerBlock, HomeTabView, SectionBlock } from "slack-edge";
-import {
-  generateTimeText,
-  getDayPartFromEventSummary,
-  getMemberNameFromEventSummary,
-} from "../helpers";
-import { CalendarEvent, Member } from "../types";
+import { HomeTabView } from "slack-edge";
 
-export function appHomeView(absenceEvents: CalendarEvent[]): HomeTabView {
+export function appHomeView(): HomeTabView {
   return {
     type: "home",
     blocks: [
-      {
-        type: "header",
-        text: {
-          type: "plain_text",
-          text: `:house: Here's what you can do:`,
-          emoji: true,
-        },
-      },
       {
         type: "actions",
         elements: [
@@ -27,7 +12,7 @@ export function appHomeView(absenceEvents: CalendarEvent[]): HomeTabView {
             action_id: "absence-new",
             text: {
               type: "plain_text",
-              text: "Register New Absence",
+              text: "New Absence",
               emoji: true,
             },
             style: "primary",
@@ -35,85 +20,19 @@ export function appHomeView(absenceEvents: CalendarEvent[]): HomeTabView {
         ],
       },
       {
-        type: "context",
+        type: "actions",
         elements: [
           {
-            type: "image",
-            image_url:
-              "https://api.slack.com/img/blocks/bkb_template_images/placeholder.png",
-            alt_text: "placeholder",
+            type: "button",
+            action_id: "view-all-absences",
+            text: {
+              type: "plain_text",
+              text: "View All Absences",
+              emoji: true,
+            },
           },
         ],
       },
-      {
-        type: "section",
-        text: {
-          type: "plain_text",
-          text: `:date: ${
-            absenceEvents.length > 0
-              ? "Current and upcoming absences"
-              : "No absences"
-          }`,
-          emoji: true,
-        },
-      },
-      {
-        type: "divider",
-      },
-      ...absenceEvents.reduce(
-        (results: (SectionBlock | DividerBlock)[], event: CalendarEvent) => {
-          const dayPart = getDayPartFromEventSummary(event.summary);
-          const memberName = getMemberNameFromEventSummary(event.summary);
-          const timeText = generateTimeText(
-            new Date(event.start.date),
-            subDays(new Date(event.end.date), 1),
-            dayPart
-          );
-
-          results.push({
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text: `*${memberName}*\n${timeText}`,
-              verbatim: true,
-            },
-            accessory: {
-              type: "button",
-              action_id: "app-home-absence-delete",
-              text: {
-                type: "plain_text",
-                text: "Delete",
-                emoji: true,
-              },
-              style: "danger",
-              value: JSON.stringify({
-                eventId: event.id,
-                email: event.attendees[0].email,
-              }),
-              confirm: {
-                title: {
-                  type: "plain_text",
-                  text: "Delete absence",
-                  emoji: true,
-                },
-                text: {
-                  type: "mrkdwn",
-                  text: `Are you sure you want to delete this absence? This cannot be undone.`,
-                  verbatim: true,
-                },
-                confirm: { type: "plain_text", text: "Delete", emoji: true },
-                style: "danger",
-              },
-            },
-          });
-          results.push({
-            type: "divider",
-          });
-
-          return results;
-        },
-        []
-      ),
     ],
   };
 }

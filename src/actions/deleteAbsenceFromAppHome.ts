@@ -1,14 +1,15 @@
-import { startOfToday } from "date-fns";
 import { BlockActionLazyHandler } from "slack-edge";
+import { findMemberById } from "../helpers";
 import { Env } from "../index";
 import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { CalendarEvent, CalendarListResponse } from "../types";
-import { findMemberById } from "../helpers";
+import { CalendarEvent } from "../types";
+import { showAbsenceList } from "./showAbsenceList";
 
 export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
   "button",
   Env
-> = async ({ context, payload, env }) => {
+> = async (req) => {
+  const { context, payload, env } = req;
   const { eventId, email } = JSON.parse(payload.actions[0].value);
   const members = JSON.parse(env.MEMBER_LIST_JSON);
   const actionUser = findMemberById({ members, id: payload.user.id });
@@ -72,18 +73,5 @@ export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
     });
   }
 
-  // Get events from google calendar
-  const queryParams = new URLSearchParams({
-    timeMin: startOfToday().toISOString(),
-    q: "off",
-    orderBy: "startTime",
-    singleEvents: "true",
-    maxResults: "2500",
-  });
-  const eventListResponse = await fetch(
-    `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events?${queryParams}`,
-    { headers: { Authorization: `Bearer ${accessToken}` } }
-  );
-  const eventListObject = <CalendarListResponse>await eventListResponse.json();
-  const absenceEvents = eventListObject.items;
+  await showAbsenceList(req);
 };
