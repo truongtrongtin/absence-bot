@@ -10,6 +10,7 @@ import { showCreateAbsenceModalFromSuggestion } from "./actions/showCreateAbsenc
 import { appHomeOpened } from "./events/appHomeOpened";
 import { memberJoinedChannel } from "./events/memberJoinedChannel";
 import { postSuggestionFromMessage } from "./messages/postSuggestionFromMessage";
+import { reportTodayAbsences } from "./services/reportTodayAbsences";
 import { showCreateAbsenceModalFromGlobalShortcut } from "./shortcuts/showCreateAbsenceModalFromGlobalShortcut";
 import { showDeleteMessageModalFromMessageShortcut } from "./shortcuts/showDeleteMessageModalFromMessageShortcut";
 import { showPostSuggestionModalFromMessageShortcut } from "./shortcuts/showPostSuggestionModalFromMessageShortcut";
@@ -94,6 +95,13 @@ export default {
         deleteMessageFromModal
       );
     return await app.run(request, ctx);
+  },
+  async scheduled(
+    controller: ScheduledController,
+    env: Env,
+    ctx: ExecutionContext
+  ) {
+    await reportTodayAbsences({ env });
   },
 };
 

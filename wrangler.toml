@@ -1,3 +1,6 @@
 name = "absence-bot"
 main = "src/index.ts"
 compatibility_date = "2024-04-25"
+
+[triggers]
+crons = ["0 0 * * 2-6"]
