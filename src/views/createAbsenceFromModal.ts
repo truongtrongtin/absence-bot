@@ -1,9 +1,15 @@
-import { addDays, addYears, format, startOfDay } from "date-fns";
 import {
   ViewSubmissionAckHandler,
   ViewSubmissionLazyHandler,
 } from "slack-edge";
-import { findMemberById, generateTimeText, isWeekendInRange } from "../helpers";
+import {
+  addDays,
+  findMemberById,
+  formatDate,
+  generateTimeText,
+  isWeekendInRange,
+  startOfToday,
+} from "../helpers";
 import { Env } from "../index";
 import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
 import { DayPart } from "../types";
@@ -32,7 +38,7 @@ export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
     const isSingleMode = startDateString === endDateString;
     const startDate = new Date(startDateString);
     const endDate = new Date(endDateString);
-    const today = startOfDay(new Date());
+    const today = startOfToday();
 
     if (isWeekendInRange(startDate, endDate)) {
       if (isSingleMode) {
@@ -67,7 +73,7 @@ export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
       };
     }
 
-    if (startDate > addYears(today, 1)) {
+    if (startDate > addDays(today, 365)) {
       return {
         response_action: "errors",
         errors: {
@@ -78,7 +84,7 @@ export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
       };
     }
 
-    if (endDate > addYears(today, 1)) {
+    if (endDate > addDays(today, 365)) {
       return {
         response_action: "errors",
         errors: {
@@ -122,14 +128,14 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
   const isSingleMode = startDateString === endDateString;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-  const today = startOfDay(new Date());
+  const today = startOfToday();
 
   if (
     endDate < startDate ||
     (!isSingleMode && dayPart !== DayPart.FULL) ||
     isWeekendInRange(startDate, endDate) ||
-    startDate > addYears(today, 1) ||
-    endDate > addYears(today, 1)
+    startDate > addDays(today, 365) ||
+    endDate > addDays(today, 365)
   ) {
     return;
   }
@@ -166,7 +172,7 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
           date: startDateString,
         },
         end: {
-          date: format(addDays(endDate, 1), "yyyy-MM-dd"),
+          date: formatDate(addDays(endDate, 1)),
         },
         summary,
         attendees: [

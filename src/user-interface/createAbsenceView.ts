@@ -1,5 +1,5 @@
-import { format } from "date-fns";
 import { AnyDescriptionOption, ModalView } from "slack-edge";
+import { formatDate, getToday } from "../helpers";
 import { AbsencePayload, DayPart } from "../types";
 
 export function createAbsenceView(absencePayload?: AbsencePayload): ModalView {
@@ -61,7 +61,7 @@ export function createAbsenceView(absencePayload?: AbsencePayload): ModalView {
           action_id: "start-date-action",
           focus_on_load: true,
           initial_date:
-            absencePayload?.startDateString || format(new Date(), "yyyy-MM-dd"),
+            absencePayload?.startDateString || formatDate(getToday()),
         },
         label: {
           type: "plain_text",

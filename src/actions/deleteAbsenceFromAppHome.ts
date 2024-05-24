@@ -1,5 +1,5 @@
 import { BlockActionLazyHandler } from "slack-edge";
-import { findMemberById } from "../helpers";
+import { findMemberById, startOfDay, startOfToday } from "../helpers";
 import { Env } from "../index";
 import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
 import { CalendarEvent } from "../types";
@@ -49,9 +49,7 @@ export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
   const eventObject = <CalendarEvent>await eventResponse.json();
 
   const startDate = eventObject.start.date;
-  if (
-    new Date(startDate).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)
-  ) {
+  if (startOfDay(new Date(startDate)) < startOfToday()) {
     return;
   }
 

@@ -1,9 +1,13 @@
-import { addYears, startOfDay } from "date-fns";
 import {
   ViewSubmissionAckHandler,
   ViewSubmissionLazyHandler,
 } from "slack-edge";
-import { generateTimeText, isWeekendInRange } from "../helpers";
+import {
+  addDays,
+  generateTimeText,
+  isWeekendInRange,
+  startOfToday,
+} from "../helpers";
 import { Env } from "../index";
 import { AbsencePayload, DayPart } from "../types";
 
@@ -34,7 +38,7 @@ export const postSuggestionFromModalAckHandler: ViewSubmissionAckHandler<
   const isSingleMode = startDateString === endDateString;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-  const today = startOfDay(new Date());
+  const today = startOfToday();
 
   if (isWeekendInRange(startDate, endDate)) {
     if (isSingleMode) {
@@ -69,7 +73,7 @@ export const postSuggestionFromModalAckHandler: ViewSubmissionAckHandler<
     };
   }
 
-  if (startDate > addYears(today, 1)) {
+  if (startDate > addDays(today, 365)) {
     return {
       response_action: "errors",
       errors: {
@@ -80,7 +84,7 @@ export const postSuggestionFromModalAckHandler: ViewSubmissionAckHandler<
     };
   }
 
-  if (endDate > addYears(today, 1)) {
+  if (endDate > addDays(today, 365)) {
     return {
       response_action: "errors",
       errors: {
@@ -122,14 +126,14 @@ export const postSuggestionFromModal: ViewSubmissionLazyHandler<Env> = async ({
   const isSingleMode = startDateString === endDateString;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-  const today = startOfDay(new Date());
+  const today = startOfToday();
 
   if (
     endDate < startDate ||
     (!isSingleMode && dayPart !== DayPart.FULL) ||
     isWeekendInRange(startDate, endDate) ||
-    startDate > addYears(today, 1) ||
-    endDate > addYears(today, 1)
+    startDate > addDays(today, 365) ||
+    endDate > addDays(today, 365)
   ) {
     return;
   }

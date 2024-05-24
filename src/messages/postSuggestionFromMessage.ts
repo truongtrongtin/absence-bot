@@ -1,7 +1,12 @@
 import * as chrono from "chrono-node";
-import { addYears, format } from "date-fns";
 import { EventLazyHandler } from "slack-edge";
-import { generateTimeText, isWeekendInRange } from "../helpers";
+import {
+  addDays,
+  formatDate,
+  generateTimeText,
+  getToday,
+  isWeekendInRange,
+} from "../helpers";
 import { Env } from "../index";
 import { AbsencePayload, DayPart } from "../types";
 
@@ -62,7 +67,7 @@ export const postSuggestionFromMessage: EventLazyHandler<
 
   const ranges = chrono.parse(translatedText);
 
-  const today = new Date();
+  const today = getToday();
   const map = new Map();
   for (const range of ranges) {
     const startDate = range.start.date();
@@ -100,7 +105,7 @@ export const postSuggestionFromMessage: EventLazyHandler<
       });
       return;
     }
-    if (startDate > addYears(today, 1)) {
+    if (startDate > addDays(today, 365)) {
       const failureText = "No more than 1 year from now!";
       await context.say({
         thread_ts: message.ts,
@@ -133,8 +138,8 @@ export const postSuggestionFromMessage: EventLazyHandler<
       dayPart = DayPart.AFTERNOON;
     }
 
-    const startDateString = format(startDate, "yyyy-MM-dd");
-    const endDateString = format(endDate, "yyyy-MM-dd");
+    const startDateString = formatDate(startDate);
+    const endDateString = formatDate(endDate);
     const isSingleMode = startDateString === endDateString;
     if (!isSingleMode && dayPart !== DayPart.FULL) return;
 

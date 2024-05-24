@@ -3,13 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "deploy": "wrangler deploy",
+    "build": "wrangler deploy --dry-run --outdir=dist",
     "dev": "wrangler dev",
     "test": "vitest"
   },
   "dependencies": {
     "chrono-node": "^2.7.5",
-    "date-fns": "^3.6.0",
     "slack-edge": "^0.12.0"
   },
   "devDependencies": {

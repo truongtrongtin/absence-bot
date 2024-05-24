@@ -1,5 +1,5 @@
-import { format } from "date-fns";
 import { AnyDescriptionOption, ModalView } from "slack-edge";
+import { formatDate, getToday } from "../helpers";
 import { DayPart } from "../types";
 
 export function createSuggestionView(
@@ -59,7 +59,7 @@ export function createSuggestionView(
         block_id: "start-date-block",
         element: {
           type: "datepicker",
-          initial_date: format(new Date(), "yyyy-MM-dd"),
+          initial_date: formatDate(getToday()),
           action_id: "start-date-action",
           focus_on_load: true,
         },

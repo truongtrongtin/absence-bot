@@ -1,4 +1,3 @@
-import { format, isSameDay } from "date-fns";
 import { DayPart, Member } from "./types";
 
 export function getDayPartFromEventSummary(summary: string) {
@@ -20,19 +19,22 @@ export function generateTimeText(
   endDate: Date,
   dayPart: DayPart
 ) {
-  const niceStartDate = format(startDate, "MMM d");
-  const niceEndDate = format(endDate, "MMM d");
-  const startWeekday = format(startDate, "EEEE");
-  const endWeekday = format(endDate, "EEEE");
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+  const niceStartDate = formatter.format(startDate);
+  const niceEndDate = formatter.format(endDate);
   let timeText = "";
 
   if (isSameDay(startDate, endDate)) {
-    timeText = `on ${niceStartDate} (${startWeekday})`;
+    timeText = `on ${niceStartDate}`;
     if (dayPart !== DayPart.FULL) {
       timeText += ` ${dayPart}`;
     }
   } else {
-    timeText = `from ${niceStartDate} (${startWeekday}) to ${niceEndDate} (${endWeekday})`;
+    timeText = `from ${niceStartDate} to ${niceEndDate}`;
   }
 
   return timeText;
@@ -62,4 +64,42 @@ export function findMemberById({
   id: string;
 }) {
   return members.find((member) => member.id === id);
+}
+
+export function getToday() {
+  const today = new Date();
+  // Asia/Ho_Chi_Minh
+  today.setHours(today.getHours() + 7);
+  return today;
+}
+
+export function startOfDay(date: Date) {
+  const newDate = new Date(date);
+  newDate.setHours(7, 0, 0, 0);
+  return newDate;
+}
+
+export function startOfToday() {
+  return startOfDay(getToday());
+}
+
+export function formatDate(date: Date) {
+  return date.toISOString().split("T")[0];
+}
+
+export function isSameDay(date1: Date, date2: Date) {
+  return (
+    date1.getDate() === date2.getDate() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getFullYear() === date2.getFullYear()
+  );
+}
+
+export function addDays(date: Date, amount: number) {
+  const newDate = new Date(date);
+  return new Date(newDate.setDate(newDate.getDate() + amount));
+}
+
+export function subDays(date: Date, amount: number) {
+  return addDays(date, -amount);
 }

@@ -1,4 +1,3 @@
-import { startOfToday, subDays } from "date-fns";
 import {
   AnyHomeTabBlock,
   BlockActionAckHandler,
@@ -9,6 +8,8 @@ import {
   generateTimeText,
   getDayPartFromEventSummary,
   getMemberNameFromEventSummary,
+  startOfToday,
+  subDays,
 } from "../helpers";
 import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
 import { CalendarListResponse } from "../types";

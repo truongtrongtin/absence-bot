@@ -1,7 +1,11 @@
-import { addDays, format } from "date-fns";
 import { BlockActionLazyHandler } from "slack-edge";
 import { Env } from "..";
-import { findMemberById, generateTimeText } from "../helpers";
+import {
+  addDays,
+  findMemberById,
+  formatDate,
+  generateTimeText,
+} from "../helpers";
 import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
 import { DayPart } from "../types";
 
@@ -76,7 +80,7 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
           date: startDateString,
         },
         end: {
-          date: format(addDays(endDate, 1), "yyyy-MM-dd"),
+          date: formatDate(addDays(endDate, 1)),
         },
         summary,
         attendees: [

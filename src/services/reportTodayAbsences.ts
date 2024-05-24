@@ -1,8 +1,11 @@
-import { startOfToday, startOfTomorrow } from "date-fns";
 import { SlackAPIClient } from "slack-web-api-client";
 import {
+  addDays,
   getDayPartFromEventSummary,
   getMemberNameFromEventSummary,
+  getToday,
+  startOfDay,
+  startOfToday,
 } from "../helpers.js";
 import { Env } from "../index.js";
 import { CalendarEvent, CalendarListResponse } from "../types.js";
@@ -10,7 +13,7 @@ import { getAccessTokenFromRefreshToken } from "./getAccessTokenFromRefreshToken
 
 export const reportTodayAbsences = async ({ env }: { env: Env }) => {
   // If today is Christmas, return
-  const today = new Date();
+  const today = startOfToday();
   if (today.getDate() === 25 && today.getMonth() === 11) {
     return;
   }
@@ -20,7 +23,7 @@ export const reportTodayAbsences = async ({ env }: { env: Env }) => {
   // Get today's absense events
   const queryParams = new URLSearchParams({
     timeMin: startOfToday().toISOString(),
-    timeMax: startOfTomorrow().toISOString(),
+    timeMax: startOfDay(addDays(getToday(), 1)).toISOString(),
     q: "off",
     maxResults: "2500",
   });
