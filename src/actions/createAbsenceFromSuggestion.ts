@@ -1,5 +1,4 @@
 import { BlockActionLazyHandler } from "slack-edge";
-import { Env } from "..";
 import {
   addDays,
   findMemberById,
@@ -7,7 +6,7 @@ import {
   generateTimeText,
 } from "../helpers";
 import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { DayPart } from "../types";
+import { DayPart, Env } from "../types";
 
 export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   "button",

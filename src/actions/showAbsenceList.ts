@@ -3,7 +3,6 @@ import {
   BlockActionAckHandler,
   BlockActionLazyHandler,
 } from "slack-edge";
-import { Env } from "..";
 import {
   generateTimeText,
   getDayPartFromEventSummary,
@@ -12,7 +11,7 @@ import {
   subDays,
 } from "../helpers";
 import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { CalendarListResponse } from "../types";
+import { CalendarListResponse, Env } from "../types";
 
 export const showAbsenceListLoader: BlockActionAckHandler<"button"> = async ({
   context,

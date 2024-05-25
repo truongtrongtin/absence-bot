@@ -1,6 +1,6 @@
 import { GlobalShortcutLazyHandler } from "slack-edge";
-import { Env } from "..";
-import { createAbsenceView } from "../user-interface/createAbsenceView";
+import { createAbsenceView } from "../blocks/createAbsenceView";
+import { Env } from "../types";
 
 export const showCreateAbsenceModalFromGlobalShortcut: GlobalShortcutLazyHandler<
   Env

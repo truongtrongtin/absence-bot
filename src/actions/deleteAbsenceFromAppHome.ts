@@ -1,8 +1,7 @@
 import { BlockActionLazyHandler } from "slack-edge";
 import { findMemberById, startOfDay, startOfToday } from "../helpers";
-import { Env } from "../index";
 import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { CalendarEvent } from "../types";
+import { CalendarEvent, Env } from "../types";
 import { showAbsenceList, showAbsenceListLoader } from "./showAbsenceList";
 
 export const deleteAbsenceFromAppHome: BlockActionLazyHandler<

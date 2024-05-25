@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "chrono-node": "^2.7.5",
+    "itty-router": "^5.0.17",
     "slack-edge": "^0.12.0"
   },
   "devDependencies": {

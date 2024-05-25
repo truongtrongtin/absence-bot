@@ -7,11 +7,14 @@ import {
   startOfDay,
   startOfToday,
 } from "../helpers.js";
-import { Env } from "../index.js";
-import { CalendarEvent, CalendarListResponse } from "../types.js";
+import { CalendarEvent, CalendarListResponse, Env } from "../types.js";
 import { getAccessTokenFromRefreshToken } from "./getAccessTokenFromRefreshToken.js";
 
-export const reportTodayAbsences = async ({ env }: { env: Env }) => {
+export const reportTodayAbsences: ExportedHandlerScheduledHandler<Env> = async (
+  controller,
+  env,
+  context
+) => {
   // If today is Christmas, return
   const today = startOfToday();
   if (today.getDate() === 25 && today.getMonth() === 11) {

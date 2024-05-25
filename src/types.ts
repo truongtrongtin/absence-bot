@@ -1,3 +1,20 @@
+import { SlackAppLogLevel } from "slack-edge";
+
+export type Env = {
+  SLACK_SIGNING_SECRET: string;
+  SLACK_BOT_TOKEN: string;
+  SLACK_LOGGING_LEVEL: SlackAppLogLevel;
+  SLACK_CHANNEL: string;
+  GOOGLE_CALENDAR_ID: string;
+  GOOGLE_CLIENT_ID: string;
+  GOOGLE_CLIENT_SECRET: string;
+  GOOGLE_REFRESH_TOKEN: string;
+  GOOGLE_API_KEY: string;
+  SPREADSHEET_ID: string;
+  MEMBER_LIST_JSON: string;
+};
+export type CFArgs = [Env, ExecutionContext];
+
 export enum DayPart {
   FULL = "full",
   MORNING = "morning",

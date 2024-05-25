@@ -10,9 +10,8 @@ import {
   isWeekendInRange,
   startOfToday,
 } from "../helpers";
-import { Env } from "../index";
 import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { DayPart } from "../types";
+import { DayPart, Env } from "../types";
 
 export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
   async ({ payload }) => {

@@ -7,8 +7,7 @@ import {
   getToday,
   isWeekendInRange,
 } from "../helpers";
-import { Env } from "../index";
-import { AbsencePayload, DayPart } from "../types";
+import { AbsencePayload, DayPart, Env } from "../types";
 
 export const postSuggestionFromMessage: EventLazyHandler<
   "message",

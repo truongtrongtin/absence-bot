@@ -8,8 +8,7 @@ import {
   isWeekendInRange,
   startOfToday,
 } from "../helpers";
-import { Env } from "../index";
-import { AbsencePayload, DayPart } from "../types";
+import { AbsencePayload, DayPart, Env } from "../types";
 
 export const postSuggestionFromModalAckHandler: ViewSubmissionAckHandler<
   Env
