@@ -14,33 +14,15 @@ import {
 import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
 import { CalendarListResponse } from "../types";
 
-export const showAbsenceListAckHandler: BlockActionAckHandler<
-  "button"
-> = async ({ context, payload }) => {
+export const showAbsenceListLoader: BlockActionAckHandler<"button"> = async ({
+  context,
+  payload,
+}) => {
   await context.client.views.publish({
     user_id: payload.user.id,
     view: {
       type: "home",
       blocks: [
-        {
-          type: "section",
-          text: {
-            type: "mrkdwn",
-            text: "*All absences*",
-          },
-          accessory: {
-            type: "button",
-            action_id: "back-to-home",
-            text: {
-              type: "plain_text",
-              text: "Back",
-              emoji: true,
-            },
-          },
-        },
-        {
-          type: "divider",
-        },
         {
           type: "section",
           text: {

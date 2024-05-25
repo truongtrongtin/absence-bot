@@ -3,7 +3,7 @@ import { findMemberById, startOfDay, startOfToday } from "../helpers";
 import { Env } from "../index";
 import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
 import { CalendarEvent } from "../types";
-import { showAbsenceList } from "./showAbsenceList";
+import { showAbsenceList, showAbsenceListLoader } from "./showAbsenceList";
 
 export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
   "button",
@@ -39,6 +39,7 @@ export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
     });
     return;
   }
+  showAbsenceListLoader(req);
   const accessToken = await getAccessTokenFromRefreshToken({ env });
 
   // Get absence event from google calendar

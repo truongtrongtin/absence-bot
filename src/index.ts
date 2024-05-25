@@ -4,7 +4,7 @@ import { createAbsenceFromSuggestion } from "./actions/createAbsenceFromSuggesti
 import { deleteAbsenceFromAppHome } from "./actions/deleteAbsenceFromAppHome";
 import {
   showAbsenceList,
-  showAbsenceListAckHandler,
+  showAbsenceListLoader,
 } from "./actions/showAbsenceList";
 import { showCreateAbsenceModalFromSuggestion } from "./actions/showCreateAbsenceModalFromSuggestion";
 import { appHomeOpened } from "./events/appHomeOpened";
@@ -59,7 +59,7 @@ export default {
         noopAckHandler,
         createAbsenceFromSuggestion
       )
-      .action("view-all-absences", showAbsenceListAckHandler, showAbsenceList)
+      .action("view-all-absences", showAbsenceListLoader, showAbsenceList)
       .action("back-to-home", noopAckHandler, backToHome)
       .globalShortcut(
         "global_new_absence",
