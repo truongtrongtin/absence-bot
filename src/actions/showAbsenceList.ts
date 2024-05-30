@@ -7,7 +7,8 @@ import {
   generateTimeText,
   getDayPartFromEventSummary,
   getMemberNameFromEventSummary,
-  startOfToday,
+  getToday,
+  startOfDay,
   subDays,
 } from "../helpers";
 import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
@@ -44,7 +45,7 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async ({
 
   // Get future absences from google calendar
   const queryParams = new URLSearchParams({
-    timeMin: startOfToday().toISOString(),
+    timeMin: startOfDay(getToday()).toISOString(),
     q: "off",
     orderBy: "startTime",
     singleEvents: "true",

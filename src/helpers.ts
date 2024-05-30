@@ -79,8 +79,10 @@ export function startOfDay(date: Date) {
   return newDate;
 }
 
-export function startOfToday() {
-  return startOfDay(getToday());
+export function endOfDay(date: Date) {
+  const newDate = new Date(date);
+  newDate.setHours(16, 59, 59, 999);
+  return newDate;
 }
 
 export function formatDate(date: Date) {

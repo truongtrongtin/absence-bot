@@ -7,8 +7,8 @@ import {
   findMemberById,
   formatDate,
   generateTimeText,
+  getToday,
   isWeekendInRange,
-  startOfToday,
 } from "../helpers";
 import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
 import { DayPart, Env } from "../types";
@@ -37,7 +37,7 @@ export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
     const isSingleMode = startDateString === endDateString;
     const startDate = new Date(startDateString);
     const endDate = new Date(endDateString);
-    const today = startOfToday();
+    const today = getToday();
 
     if (isWeekendInRange(startDate, endDate)) {
       if (isSingleMode) {
@@ -127,7 +127,7 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
   const isSingleMode = startDateString === endDateString;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-  const today = startOfToday();
+  const today = getToday();
 
   if (
     endDate < startDate ||
