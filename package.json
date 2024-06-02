@@ -8,7 +8,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "chrono-node": "^2.7.5",
+    "chrono-node": "^2.7.6",
     "itty-router": "^5.0.17",
     "slack-edge": "^0.12.0"
   },
@@ -16,6 +16,6 @@
     "@cloudflare/workers-types": "^4.20240529.0",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0",
-    "wrangler": "3.57.2"
+    "wrangler": "3.58.0"
   }
 }
