@@ -3,7 +3,8 @@ import { createSuggestionView } from "../blocks/createSuggestionView";
 
 export const showPostSuggestionModalFromMessageShortcut: MessageShortcutLazyHandler =
   async ({ context, payload }) => {
-    const targetUserId = payload.user.id;
+    const targetUserId = payload.message.user;
+    if (!targetUserId) return;
 
     await context.client.views.open({
       trigger_id: payload.trigger_id,
