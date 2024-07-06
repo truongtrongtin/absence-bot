@@ -1,4 +1,4 @@
-import { DayPart, Member } from "./types";
+import { DayPart, Member } from "@/types";
 
 export function getDayPartFromEventSummary(summary: string) {
   if (summary.includes(DayPart.MORNING)) {
@@ -64,6 +64,16 @@ export function findMemberById({
   id: string;
 }) {
   return members.find((member) => member.id === id);
+}
+
+export function findMemberByName({
+  members,
+  name,
+}: {
+  members: Member[];
+  name: string;
+}) {
+  return members.find((member) => member.name === name);
 }
 
 export function getToday() {

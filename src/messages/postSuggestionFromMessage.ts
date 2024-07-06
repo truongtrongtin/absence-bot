@@ -1,5 +1,3 @@
-import * as chrono from "chrono-node";
-import { EventLazyHandler } from "slack-edge";
 import {
   addDays,
   findMemberById,
@@ -7,8 +5,10 @@ import {
   generateTimeText,
   getToday,
   isWeekendInRange,
-} from "../helpers";
-import { AbsencePayload, DayPart, Env } from "../types";
+} from "@/helpers";
+import { AbsencePayload, DayPart, Env } from "@/types";
+import * as chrono from "chrono-node";
+import { EventLazyHandler } from "slack-edge";
 
 export const postSuggestionFromMessage: EventLazyHandler<
   "message",
@@ -32,7 +32,7 @@ export const postSuggestionFromMessage: EventLazyHandler<
     case "message_changed": {
       message = payload.message;
       const previousMessage: any = payload.previous_message;
-      // ignore when delete a message of a thread, which is also fire a message_changed event
+      // ignore when delete a message of a thread, which also triggers a message_changed event
       if (message.text === previousMessage.text) return;
       break;
     }
@@ -96,39 +96,39 @@ export const postSuggestionFromMessage: EventLazyHandler<
     }
     if (endDate < startDate) return;
     if (isWeekendInRange(startDate, endDate)) {
-      const failureText = `${quote}\nNot allow weekend!`;
-      await context.say({
-        thread_ts: message.ts,
-        blocks: [
-          {
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text: failureText,
-              verbatim: true,
-            },
-          },
-        ],
-        text: failureText,
-      });
+      // const failureText = `${quote}\nNot allow weekend!`;
+      // await context.say({
+      //   thread_ts: message.ts,
+      //   blocks: [
+      //     {
+      //       type: "section",
+      //       text: {
+      //         type: "mrkdwn",
+      //         text: failureText,
+      //         verbatim: true,
+      //       },
+      //     },
+      //   ],
+      //   text: failureText,
+      // });
       return;
     }
     if (startDate > addDays(today, 365)) {
-      const failureText = "No more than 1 year from now!";
-      await context.say({
-        thread_ts: message.ts,
-        blocks: [
-          {
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text: `${quote}\n${failureText}`,
-              verbatim: true,
-            },
-          },
-        ],
-        text: failureText,
-      });
+      // const failureText = "No more than 1 year from now!";
+      // await context.say({
+      //   thread_ts: message.ts,
+      //   blocks: [
+      //     {
+      //       type: "section",
+      //       text: {
+      //         type: "mrkdwn",
+      //         text: `${quote}\n${failureText}`,
+      //         verbatim: true,
+      //       },
+      //     },
+      //   ],
+      //   text: failureText,
+      // });
       return;
     }
 
@@ -192,9 +192,8 @@ export const postSuggestionFromMessage: EventLazyHandler<
                   emoji: true,
                 },
                 text: {
-                  type: "mrkdwn",
+                  type: "plain_text",
                   text: `Do you confirm to be absent ${timeText}?\n The submission will take some time, please be patient.`,
-                  verbatim: true,
                 },
                 confirm: {
                   type: "plain_text",

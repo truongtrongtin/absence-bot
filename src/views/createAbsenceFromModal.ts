@@ -1,17 +1,17 @@
 import {
-  ViewSubmissionAckHandler,
-  ViewSubmissionLazyHandler,
-} from "slack-edge";
-import {
   addDays,
   findMemberById,
   formatDate,
   generateTimeText,
   getToday,
   isWeekendInRange,
-} from "../helpers";
-import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { DayPart, Env } from "../types";
+} from "@/helpers";
+import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
+import { DayPart, Env } from "@/types";
+import {
+  ViewSubmissionAckHandler,
+  ViewSubmissionLazyHandler,
+} from "slack-edge";
 
 export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
   async ({ payload }) => {

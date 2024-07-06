@@ -25,6 +25,7 @@ export type Member = {
   id: string;
   email: string;
   name: string;
+  admin: boolean;
 };
 
 export type CalendarEvent = {

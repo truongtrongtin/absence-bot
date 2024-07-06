@@ -1,5 +1,5 @@
+import { CFArgs } from "@/types";
 import { IRequest, RequestHandler, error } from "itty-router";
-import { CFArgs } from "../types.js";
 
 type UserInfo = {
   name: string;

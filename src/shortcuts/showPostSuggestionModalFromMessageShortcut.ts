@@ -1,5 +1,5 @@
+import { createSuggestionView } from "@/blocks/createSuggestionView";
 import { MessageShortcutLazyHandler } from "slack-edge";
-import { createSuggestionView } from "../blocks/createSuggestionView";
 
 export const showPostSuggestionModalFromMessageShortcut: MessageShortcutLazyHandler =
   async ({ context, payload }) => {

@@ -1,33 +1,33 @@
-import { AutoRouter, IRequest, cors } from "itty-router";
-import { SlackApp } from "slack-edge";
-import { backToHome } from "./actions/backToHome";
-import { createAbsenceFromSuggestion } from "./actions/createAbsenceFromSuggestion";
-import { deleteAbsenceFromAppHome } from "./actions/deleteAbsenceFromAppHome";
+import { backToHome } from "@/actions/backToHome";
+import { createAbsenceFromSuggestion } from "@/actions/createAbsenceFromSuggestion";
+import { deleteAbsenceFromAppHome } from "@/actions/deleteAbsenceFromAppHome";
 import {
   showAbsenceList,
   showAbsenceListLoader,
-} from "./actions/showAbsenceList";
-import { showCreateAbsenceModalFromSuggestion } from "./actions/showCreateAbsenceModalFromSuggestion";
-import { getEvents } from "./controllers/getEvents";
-import { getUsers } from "./controllers/getUsers";
-import { appHomeOpened } from "./events/appHomeOpened";
-import { memberJoinedChannel } from "./events/memberJoinedChannel";
-import { postSuggestionFromMessage } from "./messages/postSuggestionFromMessage";
-import { checkAccessToken } from "./middlewares/checkAccessToken";
-import { reportTodayAbsences } from "./services/reportTodayAbsences";
-import { showCreateAbsenceModalFromGlobalShortcut } from "./shortcuts/showCreateAbsenceModalFromGlobalShortcut";
-import { showDeleteMessageModalFromMessageShortcut } from "./shortcuts/showDeleteMessageModalFromMessageShortcut";
-import { showPostSuggestionModalFromMessageShortcut } from "./shortcuts/showPostSuggestionModalFromMessageShortcut";
-import { CFArgs } from "./types";
+} from "@/actions/showAbsenceList";
+import { showCreateAbsenceModalFromSuggestion } from "@/actions/showCreateAbsenceModalFromSuggestion";
+import { getEvents } from "@/controllers/getEvents";
+import { getUsers } from "@/controllers/getUsers";
+import { appHomeOpened } from "@/events/appHomeOpened";
+import { memberJoinedChannel } from "@/events/memberJoinedChannel";
+import { postSuggestionFromMessage } from "@/messages/postSuggestionFromMessage";
+import { checkAccessToken } from "@/middlewares/checkAccessToken";
+import { reportTodayAbsences } from "@/services/reportTodayAbsences";
+import { showCreateAbsenceModalFromGlobalShortcut } from "@/shortcuts/showCreateAbsenceModalFromGlobalShortcut";
+import { showDeleteMessageModalFromMessageShortcut } from "@/shortcuts/showDeleteMessageModalFromMessageShortcut";
+import { showPostSuggestionModalFromMessageShortcut } from "@/shortcuts/showPostSuggestionModalFromMessageShortcut";
+import { CFArgs } from "@/types";
 import {
   createAbsenceFromModal,
   createAbsenceFromModalAckHandler,
-} from "./views/createAbsenceFromModal";
-import { deleteMessageFromModal } from "./views/deleteMessageFromModal";
+} from "@/views/createAbsenceFromModal";
+import { deleteMessageFromModal } from "@/views/deleteMessageFromModal";
 import {
   postSuggestionFromModal,
   postSuggestionFromModalAckHandler,
-} from "./views/postSuggestionFromModal";
+} from "@/views/postSuggestionFromModal";
+import { AutoRouter, IRequest, cors } from "itty-router";
+import { SlackApp } from "slack-edge";
 
 const { preflight, corsify } = cors();
 const router = AutoRouter<IRequest, CFArgs>({
@@ -37,6 +37,7 @@ const router = AutoRouter<IRequest, CFArgs>({
 
 router.get("/events", checkAccessToken, getEvents);
 router.get("/users", checkAccessToken, getUsers);
+router.get("/report", reportTodayAbsences);
 router.post("/slack/events", (request, env, context) => {
   async function noopAckHandler() {}
   const app = new SlackApp({ env })

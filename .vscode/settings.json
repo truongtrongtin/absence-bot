@@ -1,5 +1,6 @@
 {
   "search.exclude": {
     ".wrangler": true
-  }
+  },
+  "typescript.preferences.importModuleSpecifier": "non-relative"
 }

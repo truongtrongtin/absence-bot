@@ -1,4 +1,4 @@
-import { Env } from "../types";
+import { Env } from "@/types";
 
 type TokenObject = {
   access_token: string;

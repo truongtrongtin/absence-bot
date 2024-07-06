@@ -1,6 +1,6 @@
+import { formatDate, getToday } from "@/helpers";
+import { DayPart } from "@/types";
 import { AnyDescriptionOption, ModalView } from "slack-edge";
-import { formatDate, getToday } from "../helpers";
-import { DayPart } from "../types";
 
 export function createSuggestionView(
   targetUserId: string,

@@ -1,13 +1,13 @@
-import { SlackAPIClient } from "slack-web-api-client";
 import {
   endOfDay,
   getDayPartFromEventSummary,
   getMemberNameFromEventSummary,
   getToday,
   startOfDay,
-} from "../helpers.js";
-import { CalendarEvent, CalendarListResponse, Env } from "../types.js";
-import { getAccessTokenFromRefreshToken } from "./getAccessTokenFromRefreshToken.js";
+} from "@/helpers";
+import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
+import { CalendarEvent, CalendarListResponse, Env } from "@/types";
+import { SlackAPIClient } from "slack-web-api-client";
 
 export const reportTodayAbsences: ExportedHandlerScheduledHandler<Env> = async (
   controller,

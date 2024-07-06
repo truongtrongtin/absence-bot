@@ -1,6 +1,6 @@
+import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
+import { CFArgs, CalendarEvent, CalendarListResponse } from "@/types";
 import { IRequest, RequestHandler } from "itty-router";
-import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { CFArgs, CalendarEvent, CalendarListResponse } from "../types";
 
 export const getEvents: RequestHandler<IRequest, CFArgs> = async (
   request,

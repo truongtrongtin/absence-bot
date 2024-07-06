@@ -1,19 +1,20 @@
 import {
-  AnyHomeTabBlock,
-  BlockActionAckHandler,
-  BlockActionLazyHandler,
-} from "slack-edge";
-import {
   findMemberById,
+  findMemberByName,
   generateTimeText,
   getDayPartFromEventSummary,
   getMemberNameFromEventSummary,
   getToday,
   startOfDay,
   subDays,
-} from "../helpers";
-import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { CalendarListResponse, Env } from "../types";
+} from "@/helpers";
+import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
+import { CalendarListResponse, Env } from "@/types";
+import {
+  AnyHomeTabBlock,
+  BlockActionAckHandler,
+  BlockActionLazyHandler,
+} from "slack-edge";
 
 export const showAbsenceListLoader: BlockActionAckHandler<"button"> = async ({
   context,
@@ -66,6 +67,7 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async ({
   for (const event of absenceEvents) {
     const dayPart = getDayPartFromEventSummary(event.summary);
     const memberName = getMemberNameFromEventSummary(event.summary);
+    const email = findMemberByName({ members, name: memberName })?.email;
     const timeText = generateTimeText(
       new Date(event.start.date),
       subDays(new Date(event.end.date), 1),
@@ -89,7 +91,7 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async ({
         style: "danger",
         value: JSON.stringify({
           eventId: event.id,
-          email: event.attendees[0].email,
+          email,
         }),
         confirm: {
           title: {
@@ -98,9 +100,8 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async ({
             emoji: true,
           },
           text: {
-            type: "mrkdwn",
-            text: `Are you sure you want to delete this absence? This cannot be undone.`,
-            verbatim: true,
+            type: "plain_text",
+            text: "Are you sure you want to delete this absence? This cannot be undone.",
           },
           confirm: {
             type: "plain_text",

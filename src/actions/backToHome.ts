@@ -1,6 +1,6 @@
+import { appHomeView } from "@/blocks/appHomeView";
+import { Env } from "@/types";
 import { BlockActionLazyHandler } from "slack-edge";
-import { appHomeView } from "../blocks/appHomeView";
-import { Env } from "../types";
 
 export const backToHome: BlockActionLazyHandler<"button", Env> = async ({
   context,

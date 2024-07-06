@@ -1,12 +1,12 @@
-import { BlockActionLazyHandler } from "slack-edge";
 import {
   addDays,
   findMemberById,
   formatDate,
   generateTimeText,
-} from "../helpers";
-import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { DayPart, Env } from "../types";
+} from "@/helpers";
+import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
+import { DayPart, Env } from "@/types";
+import { BlockActionLazyHandler } from "slack-edge";
 
 export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   "button",
@@ -15,8 +15,12 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   const { targetUserId, startDateString, endDateString, dayPart, reason } =
     JSON.parse(payload.actions[0].value);
   const actionUserId = payload.user.id;
+  const actionMember = findMemberById({
+    members: JSON.parse(env.MEMBER_LIST_JSON),
+    id: actionUserId,
+  });
 
-  if (targetUserId !== actionUserId) {
+  if (targetUserId !== actionUserId && !actionMember?.admin) {
     await context.client.views.open({
       trigger_id: payload.trigger_id,
       view: {
@@ -42,8 +46,7 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
     });
     return;
   }
-
-  if (!payload.channel || !payload.message) return;
+  if (!("channel" in payload)) return;
   const channelId = payload.channel.id;
   const threadTs = payload.message.ts;
   const startDate = new Date(startDateString);
