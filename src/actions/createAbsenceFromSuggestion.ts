@@ -42,8 +42,7 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
     });
     return;
   }
-
-  if (!payload.channel || !payload.message) return;
+  if (!("channel" in payload)) return;
   const channelId = payload.channel.id;
   const threadTs = payload.message.ts;
   const startDate = new Date(startDateString);

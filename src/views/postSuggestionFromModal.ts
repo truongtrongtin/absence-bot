@@ -183,9 +183,8 @@ export const postSuggestionFromModal: ViewSubmissionLazyHandler<Env> = async ({
                 emoji: true,
               },
               text: {
-                type: "mrkdwn",
+                type: "plain_text",
                 text: `Do you confirm to be absent ${timeText}?\n The submission will take some time, please be patient.`,
-                verbatim: true,
               },
               confirm: {
                 type: "plain_text",
