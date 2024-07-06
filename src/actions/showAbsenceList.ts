@@ -99,9 +99,8 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async ({
             emoji: true,
           },
           text: {
-            type: "mrkdwn",
-            text: `Are you sure you want to delete this absence? This cannot be undone.`,
-            verbatim: true,
+            type: "plain_text",
+            text: "Are you sure you want to delete this absence? This cannot be undone.",
           },
           confirm: {
             type: "plain_text",
