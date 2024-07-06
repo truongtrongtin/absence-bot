@@ -10,9 +10,9 @@ import {
   getToday,
   startOfDay,
   subDays,
-} from "../helpers";
-import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { CalendarListResponse, Env } from "../types";
+} from "../helpers.js";
+import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken.js";
+import { CalendarListResponse, Env } from "../types.js";
 
 export const showAbsenceListLoader: BlockActionAckHandler<"button"> = async ({
   context,
@@ -53,7 +53,7 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async ({
   });
   const eventListResponse = await fetch(
     `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events?${queryParams}`,
-    { headers: { Authorization: `Bearer ${accessToken}` } }
+    { headers: { Authorization: `Bearer ${accessToken}` } },
   );
   const eventListObject = <CalendarListResponse>await eventListResponse.json();
   const absenceEvents = eventListObject.items || [];
@@ -65,7 +65,7 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async ({
     const timeText = generateTimeText(
       new Date(event.start.date),
       subDays(new Date(event.end.date), 1),
-      dayPart
+      dayPart,
     );
     absenceBlocks.push({
       type: "section",

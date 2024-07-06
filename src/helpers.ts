@@ -1,4 +1,4 @@
-import { DayPart, Member } from "./types";
+import { DayPart, Member } from "./types.js";
 
 export function getDayPartFromEventSummary(summary: string) {
   if (summary.includes(DayPart.MORNING)) {
@@ -17,7 +17,7 @@ export function getMemberNameFromEventSummary(summary: string) {
 export function generateTimeText(
   startDate: Date,
   endDate: Date,
-  dayPart: DayPart
+  dayPart: DayPart,
 ) {
   const formatter = new Intl.DateTimeFormat("en-US", {
     weekday: "short",

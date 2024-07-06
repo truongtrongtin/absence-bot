@@ -8,7 +8,7 @@ type UserInfo = {
 export const checkAccessToken: RequestHandler<IRequest, CFArgs> = async (
   controller,
   env,
-  context
+  context,
 ) => {
   const clientAccessToken = controller.query.access_token;
   if (!clientAccessToken) {
@@ -16,7 +16,7 @@ export const checkAccessToken: RequestHandler<IRequest, CFArgs> = async (
   }
   const response = await fetch(
     "https://www.googleapis.com/oauth2/v3/userinfo",
-    { headers: { Authorization: `Bearer ${clientAccessToken}` } }
+    { headers: { Authorization: `Bearer ${clientAccessToken}` } },
   );
   const userInfo = <UserInfo>await response.json();
   if (!response.ok) return error(response.status, userInfo);

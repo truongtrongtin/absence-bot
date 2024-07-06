@@ -1,8 +1,8 @@
 import { BlockActionLazyHandler } from "slack-edge";
-import { findMemberById, getToday, startOfDay } from "../helpers";
-import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { CalendarEvent, Env } from "../types";
-import { showAbsenceList, showAbsenceListLoader } from "./showAbsenceList";
+import { findMemberById, getToday, startOfDay } from "../helpers.js";
+import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken.js";
+import { CalendarEvent, Env } from "../types.js";
+import { showAbsenceList, showAbsenceListLoader } from "./showAbsenceList.js";
 
 export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
   "button",
@@ -44,7 +44,7 @@ export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
   // Get absence event from google calendar
   const eventResponse = await fetch(
     `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events/${eventId}`,
-    { headers: { Authorization: `Bearer ${accessToken}` } }
+    { headers: { Authorization: `Bearer ${accessToken}` } },
   );
   const eventObject = <CalendarEvent>await eventResponse.json();
 
@@ -59,7 +59,7 @@ export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
     {
       method: "DELETE",
       headers: { Authorization: `Bearer ${accessToken}` },
-    }
+    },
   );
 
   const message_ts = eventObject.extendedProperties.private.message_ts;

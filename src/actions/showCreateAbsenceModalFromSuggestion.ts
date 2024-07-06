@@ -1,6 +1,6 @@
 import { BlockActionLazyHandler } from "slack-edge";
-import { createAbsenceView } from "../blocks/createAbsenceView";
-import { Env } from "../types";
+import { createAbsenceView } from "../blocks/createAbsenceView.js";
+import { Env } from "../types.js";
 
 export const showCreateAbsenceModalFromSuggestion: BlockActionLazyHandler<
   "button",

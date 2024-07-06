@@ -12,7 +12,7 @@ import { getAccessTokenFromRefreshToken } from "./getAccessTokenFromRefreshToken
 export const reportTodayAbsences: ExportedHandlerScheduledHandler<Env> = async (
   controller,
   env,
-  context
+  context,
 ) => {
   // If today is Christmas, return
   const today = getToday();
@@ -31,7 +31,7 @@ export const reportTodayAbsences: ExportedHandlerScheduledHandler<Env> = async (
   });
   const eventListResponse = await fetch(
     `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events?${queryParams}`,
-    { headers: { Authorization: `Bearer ${accessToken}` } }
+    { headers: { Authorization: `Bearer ${accessToken}` } },
   );
   const eventListObject = <CalendarListResponse>await eventListResponse.json();
   const absenceEvents = eventListObject.items;

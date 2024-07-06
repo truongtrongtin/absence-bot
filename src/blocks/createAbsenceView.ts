@@ -1,6 +1,6 @@
 import { AnyDescriptionOption, ModalView } from "slack-edge";
-import { formatDate, getToday } from "../helpers";
-import { AbsencePayload, DayPart } from "../types";
+import { formatDate, getToday } from "../helpers.js";
+import { AbsencePayload, DayPart } from "../types.js";
 
 export function createAbsenceView(absencePayload?: AbsencePayload): ModalView {
   const isSingleMode =

@@ -15,7 +15,7 @@
   "forwardPorts": [8787],
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "npm install --force",
   "postStartCommand": "npm run dev",
 
   // Configure tool-specific properties.
@@ -29,7 +29,12 @@
             "path": "/usr/bin/zsh"
           }
         }
-      }
+      },
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "EditorConfig.EditorConfig"
+      ]
     }
   }
 

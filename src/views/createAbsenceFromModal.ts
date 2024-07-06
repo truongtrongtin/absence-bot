@@ -9,9 +9,9 @@ import {
   generateTimeText,
   getToday,
   isWeekendInRange,
-} from "../helpers";
-import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { DayPart, Env } from "../types";
+} from "../helpers.js";
+import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken.js";
+import { DayPart, Env } from "../types.js";
 
 export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
   async ({ payload }) => {
@@ -189,6 +189,6 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
         },
         transparency: "transparent",
       }),
-    }
+    },
   );
 };

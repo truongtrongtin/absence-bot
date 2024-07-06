@@ -1,5 +1,5 @@
 import { ViewSubmissionLazyHandler } from "slack-edge";
-import { Env } from "../types";
+import { Env } from "../types.js";
 
 export const deleteMessageFromModal: ViewSubmissionLazyHandler<Env> = async ({
   payload: { view },

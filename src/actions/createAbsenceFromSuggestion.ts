@@ -4,9 +4,9 @@ import {
   findMemberById,
   formatDate,
   generateTimeText,
-} from "../helpers";
-import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { DayPart, Env } from "../types";
+} from "../helpers.js";
+import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken.js";
+import { DayPart, Env } from "../types.js";
 
 export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   "button",
@@ -97,6 +97,6 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
         },
         transparency: "transparent",
       }),
-    }
+    },
   );
 };

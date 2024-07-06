@@ -1,5 +1,5 @@
 import { MessageShortcutLazyHandler } from "slack-edge";
-import { createSuggestionView } from "../blocks/createSuggestionView";
+import { createSuggestionView } from "../blocks/createSuggestionView.js";
 
 export const showPostSuggestionModalFromMessageShortcut: MessageShortcutLazyHandler =
   async ({ context, payload }) => {
@@ -11,7 +11,7 @@ export const showPostSuggestionModalFromMessageShortcut: MessageShortcutLazyHand
       view: createSuggestionView(
         targetUserId,
         payload.message.text || "",
-        payload.message_ts
+        payload.message_ts,
       ),
     });
   };

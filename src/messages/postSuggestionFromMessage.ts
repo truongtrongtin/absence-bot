@@ -6,8 +6,8 @@ import {
   generateTimeText,
   getToday,
   isWeekendInRange,
-} from "../helpers";
-import { AbsencePayload, DayPart, Env } from "../types";
+} from "../helpers.js";
+import { AbsencePayload, DayPart, Env } from "../types.js";
 
 export const postSuggestionFromMessage: EventLazyHandler<
   "message",
@@ -53,7 +53,7 @@ export const postSuggestionFromMessage: EventLazyHandler<
           ?.replaceAll(/-/g, " đến "),
         format: "text",
       }),
-    }
+    },
   );
   const translationObject: any = await translationResponse.json();
   const translatedText = translationObject.data.translations[0].translatedText;

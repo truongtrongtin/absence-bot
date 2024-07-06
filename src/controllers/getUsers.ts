@@ -1,12 +1,12 @@
 import { IRequest, RequestHandler } from "itty-router";
-import { getToday } from "../helpers";
-import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { CFArgs } from "../types";
+import { getToday } from "../helpers.js";
+import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken.js";
+import { CFArgs } from "../types.js";
 
 export const getUsers: RequestHandler<IRequest, CFArgs> = async (
   request,
   env,
-  context
+  context,
 ) => {
   const accessToken = await getAccessTokenFromRefreshToken({ env });
   const sheetName = getToday().getFullYear().toString();
@@ -16,7 +16,7 @@ export const getUsers: RequestHandler<IRequest, CFArgs> = async (
   });
   const response = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}/values/${sheetName}?${query}`,
-    { headers: { Authorization: `Bearer ${accessToken}` } }
+    { headers: { Authorization: `Bearer ${accessToken}` } },
   );
   const sheetValues: any = await response.json();
   if (!response.ok) throw sheetValues.error;

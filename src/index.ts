@@ -1,33 +1,33 @@
 import { AutoRouter, IRequest, cors } from "itty-router";
 import { SlackApp } from "slack-edge";
-import { backToHome } from "./actions/backToHome";
-import { createAbsenceFromSuggestion } from "./actions/createAbsenceFromSuggestion";
-import { deleteAbsenceFromAppHome } from "./actions/deleteAbsenceFromAppHome";
+import { backToHome } from "./actions/backToHome.js";
+import { createAbsenceFromSuggestion } from "./actions/createAbsenceFromSuggestion.js";
+import { deleteAbsenceFromAppHome } from "./actions/deleteAbsenceFromAppHome.js";
 import {
   showAbsenceList,
   showAbsenceListLoader,
-} from "./actions/showAbsenceList";
-import { showCreateAbsenceModalFromSuggestion } from "./actions/showCreateAbsenceModalFromSuggestion";
-import { getEvents } from "./controllers/getEvents";
-import { getUsers } from "./controllers/getUsers";
-import { appHomeOpened } from "./events/appHomeOpened";
-import { memberJoinedChannel } from "./events/memberJoinedChannel";
-import { postSuggestionFromMessage } from "./messages/postSuggestionFromMessage";
-import { checkAccessToken } from "./middlewares/checkAccessToken";
-import { reportTodayAbsences } from "./services/reportTodayAbsences";
-import { showCreateAbsenceModalFromGlobalShortcut } from "./shortcuts/showCreateAbsenceModalFromGlobalShortcut";
-import { showDeleteMessageModalFromMessageShortcut } from "./shortcuts/showDeleteMessageModalFromMessageShortcut";
-import { showPostSuggestionModalFromMessageShortcut } from "./shortcuts/showPostSuggestionModalFromMessageShortcut";
-import { CFArgs } from "./types";
+} from "./actions/showAbsenceList.js";
+import { showCreateAbsenceModalFromSuggestion } from "./actions/showCreateAbsenceModalFromSuggestion.js";
+import { getEvents } from "./controllers/getEvents.js";
+import { getUsers } from "./controllers/getUsers.js";
+import { appHomeOpened } from "./events/appHomeOpened.js";
+import { memberJoinedChannel } from "./events/memberJoinedChannel.js";
+import { postSuggestionFromMessage } from "./messages/postSuggestionFromMessage.js";
+import { checkAccessToken } from "./middlewares/checkAccessToken.js";
+import { reportTodayAbsences } from "./services/reportTodayAbsences.js";
+import { showCreateAbsenceModalFromGlobalShortcut } from "./shortcuts/showCreateAbsenceModalFromGlobalShortcut.js";
+import { showDeleteMessageModalFromMessageShortcut } from "./shortcuts/showDeleteMessageModalFromMessageShortcut.js";
+import { showPostSuggestionModalFromMessageShortcut } from "./shortcuts/showPostSuggestionModalFromMessageShortcut.js";
+import { CFArgs } from "./types.js";
 import {
   createAbsenceFromModal,
   createAbsenceFromModalAckHandler,
-} from "./views/createAbsenceFromModal";
-import { deleteMessageFromModal } from "./views/deleteMessageFromModal";
+} from "./views/createAbsenceFromModal.js";
+import { deleteMessageFromModal } from "./views/deleteMessageFromModal.js";
 import {
   postSuggestionFromModal,
   postSuggestionFromModalAckHandler,
-} from "./views/postSuggestionFromModal";
+} from "./views/postSuggestionFromModal.js";
 
 const { preflight, corsify } = cors();
 const router = AutoRouter<IRequest, CFArgs>({
@@ -45,24 +45,24 @@ router.post("/slack/events", (request, env, context) => {
     .action(
       "absence-suggestion-yes",
       noopAckHandler,
-      createAbsenceFromSuggestion
+      createAbsenceFromSuggestion,
     )
     .action("view-all-absences", showAbsenceListLoader, showAbsenceList)
     .action("back-to-home", noopAckHandler, backToHome)
     .globalShortcut(
       "global_new_absence",
       noopAckHandler,
-      showCreateAbsenceModalFromGlobalShortcut
+      showCreateAbsenceModalFromGlobalShortcut,
     )
     .messageShortcut(
       "message_delete",
       noopAckHandler,
-      showDeleteMessageModalFromMessageShortcut
+      showDeleteMessageModalFromMessageShortcut,
     )
     .messageShortcut(
       "message_new_suggestion",
       noopAckHandler,
-      showPostSuggestionModalFromMessageShortcut
+      showPostSuggestionModalFromMessageShortcut,
     )
     .anyMessage(postSuggestionFromMessage)
     .event("app_home_opened", appHomeOpened)
@@ -70,17 +70,17 @@ router.post("/slack/events", (request, env, context) => {
     .viewSubmission(
       "new-suggestion-submit",
       postSuggestionFromModalAckHandler,
-      postSuggestionFromModal
+      postSuggestionFromModal,
     )
     .viewSubmission(
       "new-absence-submit",
       createAbsenceFromModalAckHandler,
-      createAbsenceFromModal
+      createAbsenceFromModal,
     )
     .viewSubmission(
       "delete-message-submit",
       async () => ({ response_action: "clear" }),
-      deleteMessageFromModal
+      deleteMessageFromModal,
     );
   return app.run(request, context);
 });

@@ -1,5 +1,6 @@
 {
   "search.exclude": {
     ".wrangler": true
-  }
+  },
+  "eslint.useFlatConfig": true
 }

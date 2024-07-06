@@ -7,8 +7,8 @@ import {
   generateTimeText,
   getToday,
   isWeekendInRange,
-} from "../helpers";
-import { AbsencePayload, DayPart, Env } from "../types";
+} from "../helpers.js";
+import { AbsencePayload, DayPart, Env } from "../types.js";
 
 export const postSuggestionFromModalAckHandler: ViewSubmissionAckHandler<
   Env

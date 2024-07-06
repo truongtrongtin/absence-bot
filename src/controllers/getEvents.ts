@@ -1,11 +1,11 @@
 import { IRequest, RequestHandler } from "itty-router";
-import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken";
-import { CFArgs, CalendarEvent, CalendarListResponse } from "../types";
+import { getAccessTokenFromRefreshToken } from "../services/getAccessTokenFromRefreshToken.js";
+import { CFArgs, CalendarEvent, CalendarListResponse } from "../types.js";
 
 export const getEvents: RequestHandler<IRequest, CFArgs> = async (
   request,
   env,
-  context
+  context,
 ) => {
   const query = new URLSearchParams(request.query as Record<string, string>);
   const accessToken = await getAccessTokenFromRefreshToken({ env });
@@ -13,7 +13,7 @@ export const getEvents: RequestHandler<IRequest, CFArgs> = async (
   do {
     const response = await fetch(
       `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events?${query}`,
-      { headers: { Authorization: `Bearer ${accessToken}` } }
+      { headers: { Authorization: `Bearer ${accessToken}` } },
     );
     const data = <CalendarListResponse>await response.json();
     if (!response.ok) throw data;
