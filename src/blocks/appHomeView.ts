@@ -27,7 +27,7 @@ export function appHomeView(): HomeTabView {
             action_id: "view-all-absences",
             text: {
               type: "plain_text",
-              text: "View All Absences",
+              text: "View My Absences",
               emoji: true,
             },
           },
