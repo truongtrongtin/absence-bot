@@ -14,12 +14,7 @@ export const reportTodayAbsences: ExportedHandlerScheduledHandler<Env> = async (
   env,
   context
 ) => {
-  // If today is Christmas, return
   const today = getToday();
-  if (today.getDate() === 25 && today.getMonth() === 11) {
-    return;
-  }
-
   const accessToken = await getAccessTokenFromRefreshToken({ env });
 
   // Get today's absense events
@@ -27,7 +22,6 @@ export const reportTodayAbsences: ExportedHandlerScheduledHandler<Env> = async (
     timeMin: startOfDay(today).toISOString(),
     timeMax: endOfDay(today).toISOString(),
     q: "off",
-    maxResults: "2500",
   });
   const eventListResponse = await fetch(
     `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events?${queryParams}`,

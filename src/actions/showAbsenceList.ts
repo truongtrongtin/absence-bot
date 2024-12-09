@@ -4,6 +4,7 @@ import {
   BlockActionLazyHandler,
 } from "slack-edge";
 import {
+  findMemberById,
   generateTimeText,
   getDayPartFromEventSummary,
   getMemberNameFromEventSummary,
@@ -42,14 +43,17 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async ({
   env,
 }) => {
   const accessToken = await getAccessTokenFromRefreshToken({ env });
+  const members = JSON.parse(env.MEMBER_LIST_JSON);
+  if (!context.actorUserId) return;
+  const targetUser = findMemberById({ members, id: context.actorUserId });
+  if (!targetUser) return;
 
   // Get future absences from google calendar
   const queryParams = new URLSearchParams({
     timeMin: startOfDay(getToday()).toISOString(),
-    q: "off",
+    q: `${targetUser.name} (off`,
     orderBy: "startTime",
     singleEvents: "true",
-    maxResults: "2500",
   });
   const eventListResponse = await fetch(
     `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events?${queryParams}`,
@@ -130,7 +134,7 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async ({
           type: "section",
           text: {
             type: "mrkdwn",
-            text: "*All absences*",
+            text: "*My absences*",
           },
           accessory: {
             type: "button",
