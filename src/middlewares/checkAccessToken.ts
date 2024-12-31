@@ -19,5 +19,6 @@ export const checkAccessToken: RequestHandler<IRequest, CFArgs> = async (
     { headers: { Authorization: `Bearer ${clientAccessToken}` } }
   );
   const userInfo = <UserInfo>await response.json();
+  console.info(userInfo.name);
   if (!response.ok) return error(response.status, userInfo);
 };

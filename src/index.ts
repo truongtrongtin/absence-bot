@@ -7,6 +7,7 @@ import {
 } from "@/actions/showAbsenceList";
 import { showCreateAbsenceModalFromSuggestion } from "@/actions/showCreateAbsenceModalFromSuggestion";
 import { getEvents } from "@/controllers/getEvents";
+import { getQuotes } from "@/controllers/getQuotes";
 import { getUsers } from "@/controllers/getUsers";
 import { appHomeOpened } from "@/events/appHomeOpened";
 import { memberJoinedChannel } from "@/events/memberJoinedChannel";
@@ -37,6 +38,7 @@ const router = AutoRouter<IRequest, CFArgs>({
 
 router.get("/events", checkAccessToken, getEvents);
 router.get("/users", checkAccessToken, getUsers);
+router.get("/quotes", checkAccessToken, getQuotes);
 router.get("/report", reportTodayAbsences);
 router.post("/slack/events", (request, env, context) => {
   async function noopAckHandler() {}

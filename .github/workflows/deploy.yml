@@ -28,6 +28,7 @@ jobs:
             GOOGLE_API_KEY
             SPREADSHEET_ID
             MEMBER_LIST_JSON
+            API_NINJAS_API_KEY
         env:
           SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -40,3 +41,4 @@ jobs:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
           MEMBER_LIST_JSON: ${{ secrets.MEMBER_LIST_JSON }}
+          API_NINJAS_API_KEY: ${{ secrets.API_NINJAS_API_KEY }}

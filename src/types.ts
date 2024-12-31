@@ -12,6 +12,7 @@ export type Env = {
   GOOGLE_API_KEY: string;
   SPREADSHEET_ID: string;
   MEMBER_LIST_JSON: string;
+  API_NINJAS_API_KEY: string;
 };
 export type CFArgs = [Env, ExecutionContext];
 
