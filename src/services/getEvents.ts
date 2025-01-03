@@ -1,15 +1,16 @@
 import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
-import { CFArgs, CalendarEvent, CalendarListResponse } from "@/types";
-import { IRequest, RequestHandler } from "itty-router";
+import { CalendarEvent, CalendarListResponse, Env } from "@/types";
 
-export const getEvents: RequestHandler<IRequest, CFArgs> = async (
-  request,
+export const getEvents = async ({
+  query,
   env,
-  context
-) => {
-  const query = new URLSearchParams(request.query as Record<string, string>);
+}: {
+  query: URLSearchParams;
+  env: Env;
+}) => {
   const accessToken = await getAccessTokenFromRefreshToken({ env });
   let events: CalendarEvent[] = [];
+  query.set("maxResults", "2500");
   do {
     const response = await fetch(
       `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events?${query}`,
