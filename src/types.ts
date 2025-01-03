@@ -32,6 +32,7 @@ export type Member = {
 export type CalendarEvent = {
   id: string;
   summary: string;
+  description: string;
   start: {
     date: string;
   };

@@ -174,6 +174,7 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
           date: formatDate(addDays(endDate, 1)),
         },
         summary,
+        ...(trimmedReason ? { description: trimmedReason } : {}),
         attendees: [
           {
             email: targetUser.email,
@@ -184,7 +185,6 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
         extendedProperties: {
           private: {
             message_ts: newMessage.message?.ts,
-            ...(trimmedReason ? { reason: trimmedReason } : {}),
           },
         },
         transparency: "transparent",
