@@ -38,11 +38,11 @@ export const showAbsenceListLoader: BlockActionAckHandler<"button"> = async ({
   });
 };
 
-export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async ({
-  context,
-  payload,
-  env,
-}) => {
+export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
+  req
+) => {
+  await showAbsenceListLoader(req);
+  const { context, payload, env } = req;
   const accessToken = await getAccessTokenFromRefreshToken({ env });
   const members = JSON.parse(env.MEMBER_LIST_JSON);
   if (!context.actorUserId) return;

@@ -1,10 +1,7 @@
 import { backToHome } from "@/actions/backToHome";
 import { createAbsenceFromSuggestion } from "@/actions/createAbsenceFromSuggestion";
 import { deleteAbsenceFromAppHome } from "@/actions/deleteAbsenceFromAppHome";
-import {
-  showAbsenceList,
-  showAbsenceListLoader,
-} from "@/actions/showAbsenceList";
+import { showAbsenceList } from "@/actions/showAbsenceList";
 import { showCreateAbsenceModalFromSuggestion } from "@/actions/showCreateAbsenceModalFromSuggestion";
 import { events } from "@/controllers/events";
 import { getQuotes } from "@/controllers/getQuotes";
@@ -51,7 +48,7 @@ router.post("/slack/events", (request, env, context) => {
       noopAckHandler,
       createAbsenceFromSuggestion
     )
-    .action("view-all-absences", showAbsenceListLoader, showAbsenceList)
+    .action("view-all-absences", noopAckHandler, showAbsenceList)
     .action("back-to-home", noopAckHandler, backToHome)
     .globalShortcut(
       "global_new_absence",
