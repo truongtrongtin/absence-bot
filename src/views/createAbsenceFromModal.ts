@@ -158,7 +158,7 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
   });
 
   // Create new event on google calendar
-  await fetch(
+  const newEventResponse = await fetch(
     `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events`,
     {
       method: "POST",
@@ -191,4 +191,11 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
       }),
     }
   );
+
+  if (!newEventResponse.ok && newMessage.message?.ts) {
+    await context.client.chat.delete({
+      channel: env.SLACK_CHANNEL,
+      ts: newMessage.message.ts,
+    });
+  }
 };
