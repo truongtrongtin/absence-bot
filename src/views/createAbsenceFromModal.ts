@@ -7,6 +7,7 @@ import {
   isWeekendInRange,
 } from "@/helpers";
 import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
+import { getUsers } from "@/services/getUsers";
 import { DayPart, Env } from "@/types";
 import {
   ViewSubmissionAckHandler,
@@ -140,14 +141,13 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
   }
 
   const reason = view.state.values["reason-block"]["reason-action"].value || "";
-  const members = JSON.parse(env.MEMBER_LIST_JSON);
+  const members = await getUsers({ env });
   const targetUser = findMemberById({ members, id: actionUserId });
   if (!targetUser) throw Error("target user not found");
-  const targetUserName = targetUser.name;
 
   const accessToken = await getAccessTokenFromRefreshToken({ env });
   const dayPartText = dayPart === DayPart.FULL ? "(off)" : `(off ${dayPart})`;
-  const summary = `${targetUserName} ${dayPartText}`;
+  const summary = `${targetUser["Name"]} ${dayPartText}`;
   const timeText = generateTimeText(startDate, endDate, dayPart);
   const trimmedReason = reason.trim();
   const messageText = trimmedReason ? ` Reason: ${reason}` : "";
@@ -177,7 +177,7 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
         ...(trimmedReason ? { description: trimmedReason } : {}),
         attendees: [
           {
-            email: targetUser.email,
+            email: targetUser["Email"],
             responseStatus: "accepted",
           },
         ],

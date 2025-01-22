@@ -11,7 +11,6 @@ export type Env = {
   GOOGLE_REFRESH_TOKEN: string;
   GOOGLE_API_KEY: string;
   SPREADSHEET_ID: string;
-  MEMBER_LIST_JSON: string;
   API_NINJAS_API_KEY: string;
 };
 export type CFArgs = [Env, ExecutionContext];
@@ -23,10 +22,10 @@ export enum DayPart {
 }
 
 export type Member = {
-  id: string;
-  email: string;
-  name: string;
-  admin: boolean;
+  "Slack Member ID": string;
+  Email: string;
+  Name: string;
+  Admin: boolean;
 };
 
 export type CalendarEvent = {
@@ -39,7 +38,7 @@ export type CalendarEvent = {
   end: {
     date: string;
   };
-  extendedProperties: {
+  extendedProperties?: {
     private: Record<string, string>;
   };
   attendees: { email: string }[];

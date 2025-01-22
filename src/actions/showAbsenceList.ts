@@ -9,6 +9,7 @@ import {
   subDays,
 } from "@/helpers";
 import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
+import { getUsers } from "@/services/getUsers";
 import { CalendarListResponse, Env } from "@/types";
 import {
   AnyHomeTabBlock,
@@ -43,16 +44,16 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
 ) => {
   await showAbsenceListLoader(req);
   const { context, payload, env } = req;
-  const accessToken = await getAccessTokenFromRefreshToken({ env });
-  const members = JSON.parse(env.MEMBER_LIST_JSON);
   if (!context.actorUserId) return;
+  const accessToken = await getAccessTokenFromRefreshToken({ env });
+  const members = await getUsers({ env });
   const targetUser = findMemberById({ members, id: context.actorUserId });
   if (!targetUser) return;
 
   // Get future absences from google calendar
   const queryParams = new URLSearchParams({
     timeMin: startOfDay(getToday()).toISOString(),
-    q: `${targetUser.name} (off`,
+    q: `${targetUser["Name"]} (off`,
     orderBy: "startTime",
     singleEvents: "true",
   });
@@ -67,7 +68,7 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
   for (const event of absenceEvents) {
     const dayPart = getDayPartFromEventSummary(event.summary);
     const memberName = getMemberNameFromEventSummary(event.summary);
-    const email = findMemberByName({ members, name: memberName })?.email;
+    const email = findMemberByName({ members, name: memberName })?.["Email"];
     const timeText = generateTimeText(
       new Date(event.start.date),
       subDays(new Date(event.end.date), 1),
@@ -92,6 +93,7 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
         value: JSON.stringify({
           eventId: event.id,
           email,
+          message_ts: event.extendedProperties?.private?.message_ts || "",
         }),
         confirm: {
           title: {

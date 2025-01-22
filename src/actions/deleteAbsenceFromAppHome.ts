@@ -2,9 +2,8 @@ import {
   showAbsenceList,
   showAbsenceListLoader,
 } from "@/actions/showAbsenceList";
-import { findMemberById, getToday, startOfDay } from "@/helpers";
 import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
-import { CalendarEvent, Env } from "@/types";
+import { Env } from "@/types";
 import { BlockActionLazyHandler } from "slack-edge";
 
 export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
@@ -12,49 +11,8 @@ export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
   Env
 > = async (req) => {
   const { context, payload, env } = req;
-  const { eventId, email } = JSON.parse(payload.actions[0].value);
-  const members = JSON.parse(env.MEMBER_LIST_JSON);
-  const actionUser = findMemberById({ members, id: payload.user.id });
-  if (!actionUser || actionUser.email !== email) {
-    await context.client.views.open({
-      trigger_id: payload.trigger_id,
-      view: {
-        type: "modal",
-        title: {
-          type: "plain_text",
-          text: "Unauthorized!",
-        },
-        close: {
-          type: "plain_text",
-          text: "Close",
-        },
-        blocks: [
-          {
-            type: "section",
-            text: {
-              type: "plain_text",
-              text: "You are not authorized to perform this action!",
-            },
-          },
-        ],
-      },
-    });
-    return;
-  }
-  showAbsenceListLoader(req);
+  const { eventId, message_ts } = JSON.parse(payload.actions[0].value);
   const accessToken = await getAccessTokenFromRefreshToken({ env });
-
-  // Get absence event from google calendar
-  const eventResponse = await fetch(
-    `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events/${eventId}`,
-    { headers: { Authorization: `Bearer ${accessToken}` } }
-  );
-  const eventObject = <CalendarEvent>await eventResponse.json();
-
-  const startDate = eventObject.start.date;
-  if (startOfDay(new Date(startDate)) < startOfDay(getToday())) {
-    return;
-  }
 
   // Delete absence event from google calendar
   await fetch(
@@ -65,7 +23,6 @@ export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
     }
   );
 
-  const message_ts = eventObject.extendedProperties.private.message_ts;
   if (message_ts) {
     // Delete announced message
     await context.client.chat.delete({

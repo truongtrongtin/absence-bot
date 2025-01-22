@@ -5,11 +5,11 @@ import { showAbsenceList } from "@/actions/showAbsenceList";
 import { showCreateAbsenceModalFromSuggestion } from "@/actions/showCreateAbsenceModalFromSuggestion";
 import { events } from "@/controllers/events";
 import { getQuotes } from "@/controllers/getQuotes";
-import { getUsers } from "@/controllers/getUsers";
 import { appHomeOpened } from "@/events/appHomeOpened";
 import { memberJoinedChannel } from "@/events/memberJoinedChannel";
 import { postSuggestionFromMessage } from "@/messages/postSuggestionFromMessage";
 import { checkAccessToken } from "@/middlewares/checkAccessToken";
+import { getUsers } from "@/services/getUsers";
 import { reportTodayAbsences } from "@/services/reportTodayAbsences";
 import { showCreateAbsenceModalFromGlobalShortcut } from "@/shortcuts/showCreateAbsenceModalFromGlobalShortcut";
 import { showDeleteMessageModalFromMessageShortcut } from "@/shortcuts/showDeleteMessageModalFromMessageShortcut";
@@ -34,7 +34,7 @@ const router = AutoRouter<IRequest, CFArgs>({
 });
 
 router.get("/events", checkAccessToken, events);
-router.get("/users", checkAccessToken, getUsers);
+router.get("/users", checkAccessToken, (_, env) => getUsers({ env }));
 router.get("/quotes", checkAccessToken, getQuotes);
 // router.get("/migrate", migrateEventName);
 router.get("/report", reportTodayAbsences);

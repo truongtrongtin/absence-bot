@@ -5,6 +5,7 @@ import {
   generateTimeText,
 } from "@/helpers";
 import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
+import { getUsers } from "@/services/getUsers";
 import { DayPart, Env } from "@/types";
 import { BlockActionLazyHandler } from "slack-edge";
 
@@ -15,12 +16,10 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   const { targetUserId, startDateString, endDateString, dayPart, reason } =
     JSON.parse(payload.actions[0].value);
   const actionUserId = payload.user.id;
-  const actionMember = findMemberById({
-    members: JSON.parse(env.MEMBER_LIST_JSON),
-    id: actionUserId,
-  });
+  const members = await getUsers({ env });
+  const actionMember = findMemberById({ members, id: actionUserId });
 
-  if (targetUserId !== actionUserId && !actionMember?.admin) {
+  if (targetUserId !== actionUserId && !actionMember?.["Admin"]) {
     await context.client.views.open({
       trigger_id: payload.trigger_id,
       view: {
@@ -51,14 +50,12 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   const threadTs = payload.message.ts;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-  const members = JSON.parse(env.MEMBER_LIST_JSON);
   const targetUser = findMemberById({ members, id: targetUserId });
   if (!targetUser) throw Error("target user not found");
-  const targetUserName = targetUser.name;
 
   const accessToken = await getAccessTokenFromRefreshToken({ env });
   const dayPartText = dayPart === DayPart.FULL ? "(off)" : `(off ${dayPart})`;
-  const summary = `${targetUserName} ${dayPartText}`;
+  const summary = `${targetUser["Name"]} ${dayPartText}`;
   const timeText = generateTimeText(startDate, endDate, dayPart);
   const trimmedReason = reason.trim();
 
@@ -88,7 +85,7 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
         ...(trimmedReason ? { description: trimmedReason } : {}),
         attendees: [
           {
-            email: targetUser.email,
+            email: targetUser["Email"],
             responseStatus: "accepted",
           },
         ],

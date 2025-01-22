@@ -1,6 +1,5 @@
 import {
   addDays,
-  findMemberById,
   formatDate,
   generateTimeText,
   getToday,
@@ -14,14 +13,6 @@ export const postSuggestionFromMessage: EventLazyHandler<
   "message",
   Env
 > = async ({ context, payload, env }) => {
-  const members = JSON.parse(env.MEMBER_LIST_JSON);
-  if (
-    !context.actorUserId ||
-    !findMemberById({ members, id: context.actorUserId })
-  ) {
-    return;
-  }
-
   let message: any;
   switch (payload.subtype) {
     case "file_share":

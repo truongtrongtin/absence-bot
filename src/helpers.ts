@@ -63,7 +63,7 @@ export function findMemberById({
   members: Member[];
   id: string;
 }) {
-  return members.find((member) => member.id === id);
+  return members.find((member) => member["Slack Member ID"] === id);
 }
 
 export function findMemberByName({
@@ -73,7 +73,7 @@ export function findMemberByName({
   members: Member[];
   name: string;
 }) {
-  return members.find((member) => member.name === name);
+  return members.find((member) => member["Name"] === name);
 }
 
 export function getToday() {

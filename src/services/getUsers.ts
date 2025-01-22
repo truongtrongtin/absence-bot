@@ -1,13 +1,8 @@
 import { getToday } from "@/helpers";
 import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
-import { CFArgs } from "@/types";
-import { IRequest, RequestHandler } from "itty-router";
+import { Env, Member } from "@/types";
 
-export const getUsers: RequestHandler<IRequest, CFArgs> = async (
-  request,
-  env,
-  context
-) => {
+export const getUsers = async ({ env }: { env: Env }) => {
   const accessToken = await getAccessTokenFromRefreshToken({ env });
   const sheetName = getToday().getFullYear().toString();
   const query = new URLSearchParams({
@@ -31,5 +26,5 @@ export const getUsers: RequestHandler<IRequest, CFArgs> = async (
     }
     result.push(obj);
   }
-  return result;
+  return result as unknown as Member[];
 };
