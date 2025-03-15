@@ -79,7 +79,7 @@ export function findMemberByName({
 export function getToday() {
   const today = new Date();
   // Asia/Ho_Chi_Minh
-  today.setHours(today.getHours() + 7);
+  // today.setHours(today.getHours() + 7);
   return today;
 }
 
