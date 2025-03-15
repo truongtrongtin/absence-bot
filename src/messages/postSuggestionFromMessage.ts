@@ -6,7 +6,7 @@ import {
   isWeekendInRange,
 } from "@/helpers";
 import { AbsencePayload, DayPart, Env } from "@/types";
-import * as chrono from "chrono-node";
+import * as chrono from "chrono-node/en";
 import { EventLazyHandler } from "slack-edge";
 
 export const postSuggestionFromMessage: EventLazyHandler<
