@@ -1,7 +1,4 @@
-import {
-  showAbsenceList,
-  showAbsenceListLoader,
-} from "@/actions/showAbsenceList";
+import { showAbsenceList } from "@/actions/showAbsenceList";
 import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
 import { Env } from "@/types";
 import { BlockActionLazyHandler } from "slack-edge";

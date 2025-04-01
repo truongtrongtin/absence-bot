@@ -1,6 +1,6 @@
 import {
   addDays,
-  findMemberById,
+  findUserById,
   formatDate,
   generateTimeText,
   getToday,
@@ -141,8 +141,8 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
   }
 
   const reason = view.state.values["reason-block"]["reason-action"].value || "";
-  const members = await getUsers({ env });
-  const targetUser = findMemberById({ members, id: actionUserId });
+  const users = await getUsers({ env });
+  const targetUser = findUserById({ users, id: actionUserId });
   if (!targetUser) throw Error("target user not found");
 
   const accessToken = await getAccessTokenFromRefreshToken({ env });

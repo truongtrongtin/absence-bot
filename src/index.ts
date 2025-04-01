@@ -5,11 +5,11 @@ import { showAbsenceList } from "@/actions/showAbsenceList";
 import { showCreateAbsenceModalFromSuggestion } from "@/actions/showCreateAbsenceModalFromSuggestion";
 import { events } from "@/controllers/events";
 import { getQuotes } from "@/controllers/getQuotes";
+import { users } from "@/controllers/users";
 import { appHomeOpened } from "@/events/appHomeOpened";
 import { memberJoinedChannel } from "@/events/memberJoinedChannel";
 import { postSuggestionFromMessage } from "@/messages/postSuggestionFromMessage";
-import { checkAccessToken } from "@/middlewares/checkAccessToken";
-import { getUsers } from "@/services/getUsers";
+import { withUser } from "@/middlewares/withUser";
 import { reportTodayAbsences } from "@/services/reportTodayAbsences";
 import { showCreateAbsenceModalFromGlobalShortcut } from "@/shortcuts/showCreateAbsenceModalFromGlobalShortcut";
 import { showDeleteMessageModalFromMessageShortcut } from "@/shortcuts/showDeleteMessageModalFromMessageShortcut";
@@ -33,9 +33,9 @@ const router = AutoRouter<IRequest, CFArgs>({
   finally: [corsify],
 });
 
-router.get("/events", checkAccessToken, events);
-router.get("/users", checkAccessToken, (_, env) => getUsers({ env }));
-router.get("/quotes", checkAccessToken, getQuotes);
+router.get("/events", withUser, events);
+router.get("/users", withUser, users);
+router.get("/quotes", withUser, getQuotes);
 // router.get("/migrate", migrateEventName);
 router.get("/report", reportTodayAbsences);
 router.post("/slack/events", (request, env, context) => {

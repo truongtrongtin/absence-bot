@@ -1,12 +1,12 @@
 import {
   endOfDay,
   getDayPartFromEventSummary,
-  getMemberNameFromEventSummary,
   getToday,
+  getUserNameFromEventSummary,
   startOfDay,
 } from "@/helpers";
-import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
-import { CalendarEvent, CalendarListResponse, Env } from "@/types";
+import { getEvents } from "@/services/getEvents";
+import { CalendarEvent, Env } from "@/types";
 import { SlackAPIClient } from "slack-web-api-client";
 
 export const reportTodayAbsences: ExportedHandlerScheduledHandler<Env> = async (
@@ -15,21 +15,14 @@ export const reportTodayAbsences: ExportedHandlerScheduledHandler<Env> = async (
   context
 ) => {
   const today = getToday();
-  const accessToken = await getAccessTokenFromRefreshToken({ env });
 
   // Get today's absense events
-  const queryParams = new URLSearchParams({
+  const query = new URLSearchParams({
     timeMin: startOfDay(today).toISOString(),
     timeMax: endOfDay(today).toISOString(),
     q: "off",
   });
-  const eventListResponse = await fetch(
-    `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events?${queryParams}`,
-    { headers: { Authorization: `Bearer ${accessToken}` } }
-  );
-  const eventListObject = <CalendarListResponse>await eventListResponse.json();
-  const absenceEvents = eventListObject.items;
-
+  const absenceEvents = await getEvents({ env, query });
   if (absenceEvents.length === 0) return;
 
   const client = new SlackAPIClient(env.SLACK_BOT_TOKEN);
@@ -46,7 +39,7 @@ export const reportTodayAbsences: ExportedHandlerScheduledHandler<Env> = async (
             elements: [
               {
                 type: "text",
-                text: "Today's planned absences:\n",
+                text: "Today's absences:\n",
               },
             ],
           },
@@ -54,14 +47,14 @@ export const reportTodayAbsences: ExportedHandlerScheduledHandler<Env> = async (
             type: "rich_text_list",
             style: "bullet",
             elements: absenceEvents.map((event: CalendarEvent) => {
-              const memberName = getMemberNameFromEventSummary(event.summary);
+              const userName = getUserNameFromEventSummary(event.summary);
               const dayPart = getDayPartFromEventSummary(event.summary);
               return {
                 type: "rich_text_section",
                 elements: [
                   {
                     type: "text",
-                    text: `${memberName}: `,
+                    text: `${userName}: `,
                   },
                   {
                     type: "text",

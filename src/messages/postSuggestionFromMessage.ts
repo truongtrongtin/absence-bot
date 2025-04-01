@@ -35,10 +35,13 @@ export const postSuggestionFromMessage: EventLazyHandler<
   if (!regexp.test(message.text)) return;
 
   const translationResponse = await fetch(
-    `https://translation.googleapis.com/language/translate/v2?key=${env.GOOGLE_API_KEY}`,
+    `https://translation.googleapis.com/language/translate/v2`,
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-goog-api-key": env.GOOGLE_API_KEY,
+      },
       body: JSON.stringify({
         source: "vi",
         target: "en",
