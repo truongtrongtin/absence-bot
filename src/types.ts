@@ -21,7 +21,7 @@ export enum DayPart {
   AFTERNOON = "afternoon",
 }
 
-export type Member = {
+export type User = {
   "Slack Member ID": string;
   Email: string;
   Name: string;

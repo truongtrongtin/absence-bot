@@ -1,16 +1,15 @@
 import {
-  findMemberById,
-  findMemberByName,
+  findUserById,
   generateTimeText,
   getDayPartFromEventSummary,
-  getMemberNameFromEventSummary,
   getToday,
+  getUserNameFromEventSummary,
   startOfDay,
   subDays,
 } from "@/helpers";
-import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
+import { getEvents } from "@/services/getEvents";
 import { getUsers } from "@/services/getUsers";
-import { CalendarListResponse, Env } from "@/types";
+import { Env } from "@/types";
 import {
   AnyHomeTabBlock,
   BlockActionAckHandler,
@@ -45,30 +44,23 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
   await showAbsenceListLoader(req);
   const { context, payload, env } = req;
   if (!context.actorUserId) return;
-  const accessToken = await getAccessTokenFromRefreshToken({ env });
-  const members = await getUsers({ env });
-  const targetUser = findMemberById({ members, id: context.actorUserId });
+  const users = await getUsers({ env });
+  const targetUser = findUserById({ users, id: context.actorUserId });
   if (!targetUser) return;
 
   // Get future absences from google calendar
-  const queryParams = new URLSearchParams({
+  const query = new URLSearchParams({
     timeMin: startOfDay(getToday()).toISOString(),
     q: `${targetUser["Name"]} (off`,
     orderBy: "startTime",
     singleEvents: "true",
   });
-  const eventListResponse = await fetch(
-    `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events?${queryParams}`,
-    { headers: { Authorization: `Bearer ${accessToken}` } }
-  );
-  const eventListObject = <CalendarListResponse>await eventListResponse.json();
-  const absenceEvents = eventListObject.items || [];
+  const absenceEvents = await getEvents({ env, query });
 
   const absenceBlocks: AnyHomeTabBlock[] = [];
   for (const event of absenceEvents) {
     const dayPart = getDayPartFromEventSummary(event.summary);
-    const memberName = getMemberNameFromEventSummary(event.summary);
-    const email = findMemberByName({ members, name: memberName })?.["Email"];
+    const userName = getUserNameFromEventSummary(event.summary);
     const timeText = generateTimeText(
       new Date(event.start.date),
       subDays(new Date(event.end.date), 1),
@@ -78,7 +70,7 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `*${memberName}*\n${timeText}`,
+        text: `*${userName}*\n${timeText}`,
         verbatim: true,
       },
       accessory: {
@@ -92,7 +84,6 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
         style: "danger",
         value: JSON.stringify({
           eventId: event.id,
-          email,
           message_ts: event.extendedProperties?.private?.message_ts || "",
         }),
         confirm: {

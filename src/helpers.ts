@@ -1,6 +1,6 @@
-import { DayPart, Member } from "@/types";
+import { CalendarEvent, DayPart, User } from "@/types";
 
-export function getDayPartFromEventSummary(summary: string) {
+export function getDayPartFromEventSummary(summary: CalendarEvent["summary"]) {
   if (summary.includes(DayPart.MORNING)) {
     return DayPart.MORNING;
   }
@@ -10,7 +10,7 @@ export function getDayPartFromEventSummary(summary: string) {
   return DayPart.FULL;
 }
 
-export function getMemberNameFromEventSummary(summary: string) {
+export function getUserNameFromEventSummary(summary: CalendarEvent["summary"]) {
   return summary.split(" (off")[0];
 }
 
@@ -56,24 +56,34 @@ export function isWeekendInRange(startDate: Date, endDate: Date) {
   return false;
 }
 
-export function findMemberById({
-  members,
-  id,
+export function findUserByEmail({
+  users,
+  email,
 }: {
-  members: Member[];
-  id: string;
+  users: User[];
+  email: User["Email"];
 }) {
-  return members.find((member) => member["Slack Member ID"] === id);
+  return users.find((user) => user["Email"] === email);
 }
 
-export function findMemberByName({
-  members,
+export function findUserById({
+  users,
+  id,
+}: {
+  users: User[];
+  id: User["Email"];
+}) {
+  return users.find((user) => user["Slack Member ID"] === id);
+}
+
+export function findUserByName({
+  users,
   name,
 }: {
-  members: Member[];
-  name: string;
+  users: User[];
+  name: User["Name"];
 }) {
-  return members.find((member) => member["Name"] === name);
+  return users.find((user) => user["Name"] === name);
 }
 
 export function getToday() {

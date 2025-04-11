@@ -1,9 +1,0 @@
-name = "absence-bot"
-main = "src/index.ts"
-compatibility_date = "2025-03-23"
-
-[triggers]
-crons = ["0 0 * * 2-6"]
-
-[observability]
-enabled = true

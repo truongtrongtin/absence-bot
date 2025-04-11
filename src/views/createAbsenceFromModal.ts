@@ -1,6 +1,6 @@
 import {
   addDays,
-  findMemberById,
+  findUserById,
   formatDate,
   generateTimeText,
   getToday,
@@ -14,100 +14,101 @@ import {
   ViewSubmissionLazyHandler,
 } from "slack-edge";
 
-export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler =
-  async ({ payload }) => {
-    const view = payload.view;
-    const startDateString =
-      view.state.values["start-date-block"]["start-date-action"].selected_date;
-    if (!startDateString) {
+export const createAbsenceFromModalAckHandler: ViewSubmissionAckHandler<
+  Env
+> = async ({ payload }) => {
+  const view = payload.view;
+  const startDateString =
+    view.state.values["start-date-block"]["start-date-action"].selected_date;
+  if (!startDateString) {
+    return {
+      response_action: "errors",
+      errors: {
+        "start-date-block": "Start date is required",
+        "end-date-block": "",
+        "day-part-block": "",
+      },
+    };
+  }
+  const endDateString =
+    view.state.values["end-date-block"]["end-date-action"].selected_date ||
+    startDateString;
+  const dayPart = view.state.values["day-part-block"]["day-part-action"]
+    .selected_option?.value as DayPart;
+
+  const isSingleMode = startDateString === endDateString;
+  const startDate = new Date(startDateString);
+  const endDate = new Date(endDateString);
+  const today = getToday();
+
+  if (isWeekendInRange(startDate, endDate)) {
+    if (isSingleMode) {
       return {
         response_action: "errors",
         errors: {
-          "start-date-block": "Start date is required",
+          "start-date-block": "Not allow weekend",
           "end-date-block": "",
           "day-part-block": "",
         },
       };
-    }
-    const endDateString =
-      view.state.values["end-date-block"]["end-date-action"].selected_date ||
-      startDateString;
-    const dayPart = view.state.values["day-part-block"]["day-part-action"]
-      .selected_option?.value as DayPart;
-
-    const isSingleMode = startDateString === endDateString;
-    const startDate = new Date(startDateString);
-    const endDate = new Date(endDateString);
-    const today = getToday();
-
-    if (isWeekendInRange(startDate, endDate)) {
-      if (isSingleMode) {
-        return {
-          response_action: "errors",
-          errors: {
-            "start-date-block": "Not allow weekend",
-            "end-date-block": "",
-            "day-part-block": "",
-          },
-        };
-      } else {
-        return {
-          response_action: "errors",
-          errors: {
-            "start-date-block": "Not allow weekend in range",
-            "end-date-block": "Not allow weekend in range",
-            "day-part-block": "",
-          },
-        };
-      }
-    }
-
-    if (endDate < startDate) {
+    } else {
       return {
         response_action: "errors",
         errors: {
-          "start-date-block": "",
-          "end-date-block": "Must not be earlier than start date",
+          "start-date-block": "Not allow weekend in range",
+          "end-date-block": "Not allow weekend in range",
           "day-part-block": "",
         },
       };
     }
+  }
 
-    if (startDate > addDays(today, 365)) {
-      return {
-        response_action: "errors",
-        errors: {
-          "start-date-block": "Must not be later than 1 year from now",
-          "end-date-block": "",
-          "day-part-block": "",
-        },
-      };
-    }
+  if (endDate < startDate) {
+    return {
+      response_action: "errors",
+      errors: {
+        "start-date-block": "",
+        "end-date-block": "Must not be earlier than start date",
+        "day-part-block": "",
+      },
+    };
+  }
 
-    if (endDate > addDays(today, 365)) {
-      return {
-        response_action: "errors",
-        errors: {
-          "start-date-block": "",
-          "end-date-block": "Must not be later than 1 year from now",
-          "day-part-block": "",
-        },
-      };
-    }
+  if (startDate > addDays(today, 365)) {
+    return {
+      response_action: "errors",
+      errors: {
+        "start-date-block": "Must not be later than 1 year from now",
+        "end-date-block": "",
+        "day-part-block": "",
+      },
+    };
+  }
 
-    if (!isSingleMode && dayPart !== DayPart.FULL) {
-      return {
-        response_action: "errors",
-        errors: {
-          "start-date-block": "",
-          "end-date-block": "",
-          "day-part-block": "This option is not supported in multi-date mode",
-        },
-      };
-    }
+  if (endDate > addDays(today, 365)) {
+    return {
+      response_action: "errors",
+      errors: {
+        "start-date-block": "",
+        "end-date-block": "Must not be later than 1 year from now",
+        "day-part-block": "",
+      },
+    };
+  }
 
-    return { response_action: "clear" };
-  };
+  if (!isSingleMode && dayPart !== DayPart.FULL) {
+    return {
+      response_action: "errors",
+      errors: {
+        "start-date-block": "",
+        "end-date-block": "",
+        "day-part-block": "This option is not supported in multi-date mode",
+      },
+    };
+  }
+
+  return { response_action: "clear" };
+};
 
 export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
   payload,
@@ -141,8 +142,8 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
   }
 
   const reason = view.state.values["reason-block"]["reason-action"].value || "";
-  const members = await getUsers({ env });
-  const targetUser = findMemberById({ members, id: actionUserId });
+  const users = await getUsers({ env });
+  const targetUser = findUserById({ users, id: actionUserId });
   if (!targetUser) throw Error("target user not found");
 
   const accessToken = await getAccessTokenFromRefreshToken({ env });

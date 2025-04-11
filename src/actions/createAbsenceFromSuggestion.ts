@@ -1,9 +1,4 @@
-import {
-  addDays,
-  findMemberById,
-  formatDate,
-  generateTimeText,
-} from "@/helpers";
+import { addDays, findUserById, formatDate, generateTimeText } from "@/helpers";
 import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
 import { getUsers } from "@/services/getUsers";
 import { DayPart, Env } from "@/types";
@@ -16,10 +11,10 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   const { targetUserId, startDateString, endDateString, dayPart, reason } =
     JSON.parse(payload.actions[0].value);
   const actionUserId = payload.user.id;
-  const members = await getUsers({ env });
-  const actionMember = findMemberById({ members, id: actionUserId });
+  const users = await getUsers({ env });
+  const actionUser = findUserById({ users, id: actionUserId });
 
-  if (targetUserId !== actionUserId && !actionMember?.["Admin"]) {
+  if (targetUserId !== actionUserId && !actionUser?.["Admin"]) {
     await context.client.views.open({
       trigger_id: payload.trigger_id,
       view: {
@@ -50,7 +45,7 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   const threadTs = payload.message.ts;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-  const targetUser = findMemberById({ members, id: targetUserId });
+  const targetUser = findUserById({ users, id: targetUserId });
   if (!targetUser) throw Error("target user not found");
 
   const accessToken = await getAccessTokenFromRefreshToken({ env });

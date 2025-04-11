@@ -45,4 +45,4 @@ The bot is automatically deployed to Cloudflare Workers using GitHub Actions whe
 
 ## Scheduled Tasks
 
-The bot runs a daily task (weekdays) to report absences in the configured Slack channel. See `wrangler.toml` for the cron schedule.
+The bot runs a daily task (weekdays) to report absences in the configured Slack channel. See `wrangler.json` for the cron schedule.

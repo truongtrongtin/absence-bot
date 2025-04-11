@@ -1,6 +1,6 @@
 import { getToday } from "@/helpers";
 import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
-import { Env, Member } from "@/types";
+import { Env, User } from "@/types";
 
 export const getUsers = async ({ env }: { env: Env }) => {
   const accessToken = await getAccessTokenFromRefreshToken({ env });
@@ -26,5 +26,5 @@ export const getUsers = async ({ env }: { env: Env }) => {
     }
     result.push(obj);
   }
-  return result as unknown as Member[];
+  return result as unknown as User[];
 };
