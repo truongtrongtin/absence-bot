@@ -14,7 +14,7 @@ export const getEvents = async ({
   do {
     const response = await fetch(
       `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events?${query}`,
-      { headers: { Authorization: `Bearer ${accessToken}` } }
+      { headers: { Authorization: `Bearer ${accessToken}` } },
     );
     const data = <CalendarListResponse>await response.json();
     if (!response.ok) throw data;

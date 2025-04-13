@@ -17,7 +17,7 @@ export function getUserNameFromEventSummary(summary: CalendarEvent["summary"]) {
 export function generateTimeText(
   startDate: Date,
   endDate: Date,
-  dayPart: DayPart
+  dayPart: DayPart,
 ) {
   const formatter = new Intl.DateTimeFormat("en-US", {
     weekday: "short",

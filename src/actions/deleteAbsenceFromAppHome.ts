@@ -17,7 +17,7 @@ export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
     {
       method: "DELETE",
       headers: { Authorization: `Bearer ${accessToken}` },
-    }
+    },
   );
 
   if (message_ts) {

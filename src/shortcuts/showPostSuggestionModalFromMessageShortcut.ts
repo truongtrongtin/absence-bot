@@ -11,7 +11,7 @@ export const showPostSuggestionModalFromMessageShortcut: MessageShortcutLazyHand
       view: createSuggestionView(
         targetUserId,
         payload.message.text || "",
-        payload.message_ts
+        payload.message_ts,
       ),
     });
   };

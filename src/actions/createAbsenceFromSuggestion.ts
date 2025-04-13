@@ -92,7 +92,7 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
         },
         transparency: "transparent",
       }),
-    }
+    },
   );
 
   if (!newEventResponse.ok && newMessage.message?.ts) {
