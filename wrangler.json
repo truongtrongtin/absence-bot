@@ -1,8 +1,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "absence-bot",
-  "main": "src/index.ts",
-  "compatibility_date": "2025-04-04",
+  "main": "src/main.ts",
+  "compatibility_date": "2025-04-17",
   "triggers": {
     "crons": ["0 0 * * 2-6"]
   },

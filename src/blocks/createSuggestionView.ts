@@ -5,7 +5,7 @@ import { AnyDescriptionOption, ModalView } from "slack-edge";
 export function createSuggestionView(
   targetUserId: string,
   reason: string,
-  messageTs: string
+  messageTs: string,
 ): ModalView {
   const dayPartOptions: AnyDescriptionOption[] = [
     {

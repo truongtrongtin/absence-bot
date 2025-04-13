@@ -28,7 +28,7 @@ import { AutoRouter, IRequest, cors } from "itty-router";
 import { SlackApp } from "slack-edge";
 
 const { preflight, corsify } = cors();
-const router = AutoRouter<IRequest, CFArgs>({
+const router = AutoRouter<IRequest, CFArgs, Response>({
   before: [preflight],
   finally: [corsify],
 });
@@ -46,24 +46,24 @@ router.post("/slack/events", (request, env, context) => {
     .action(
       "absence-suggestion-yes",
       noopAckHandler,
-      createAbsenceFromSuggestion
+      createAbsenceFromSuggestion,
     )
     .action("view-all-absences", noopAckHandler, showAbsenceList)
     .action("back-to-home", noopAckHandler, backToHome)
     .globalShortcut(
       "global_new_absence",
       noopAckHandler,
-      showCreateAbsenceModalFromGlobalShortcut
+      showCreateAbsenceModalFromGlobalShortcut,
     )
     .messageShortcut(
       "message_delete",
       noopAckHandler,
-      showDeleteMessageModalFromMessageShortcut
+      showDeleteMessageModalFromMessageShortcut,
     )
     .messageShortcut(
       "message_new_suggestion",
       noopAckHandler,
-      showPostSuggestionModalFromMessageShortcut
+      showPostSuggestionModalFromMessageShortcut,
     )
     .anyMessage(postSuggestionFromMessage)
     .event("app_home_opened", appHomeOpened)
@@ -71,17 +71,17 @@ router.post("/slack/events", (request, env, context) => {
     .viewSubmission(
       "new-suggestion-submit",
       postSuggestionFromModalAckHandler,
-      postSuggestionFromModal
+      postSuggestionFromModal,
     )
     .viewSubmission(
       "new-absence-submit",
       createAbsenceFromModalAckHandler,
-      createAbsenceFromModal
+      createAbsenceFromModal,
     )
     .viewSubmission(
       "delete-message-submit",
       async () => ({ response_action: "clear" }),
-      deleteMessageFromModal
+      deleteMessageFromModal,
     );
   return app.run(request, context);
 });
@@ -89,4 +89,4 @@ router.post("/slack/events", (request, env, context) => {
 export default {
   fetch: router.fetch,
   scheduled: reportTodayAbsences,
-};
+} satisfies ExportedHandler<CFArgs[0]>;

@@ -11,7 +11,6 @@ type GoogleUser = {
 export const withUser: RequestHandler<IRequest, CFArgs> = async (
   request,
   env,
-  context
 ) => {
   const clientAccessToken = request.query.access_token;
   if (!clientAccessToken) {
@@ -19,7 +18,7 @@ export const withUser: RequestHandler<IRequest, CFArgs> = async (
   }
   const response = await fetch(
     "https://www.googleapis.com/oauth2/v3/userinfo",
-    { headers: { Authorization: `Bearer ${clientAccessToken}` } }
+    { headers: { Authorization: `Bearer ${clientAccessToken}` } },
   );
   const googleUser = <GoogleUser>await response.json();
   console.info(googleUser.name);

@@ -11,7 +11,7 @@ export const getUsers = async ({ env }: { env: Env }) => {
   });
   const response = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}/values/${sheetName}?${query}`,
-    { headers: { Authorization: `Bearer ${accessToken}` } }
+    { headers: { Authorization: `Bearer ${accessToken}` } },
   );
   const sheetValues: any = await response.json();
   if (!response.ok) throw sheetValues.error;

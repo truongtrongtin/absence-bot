@@ -39,7 +39,7 @@ export const showAbsenceListLoader: BlockActionAckHandler<"button"> = async ({
 };
 
 export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
-  req
+  req,
 ) => {
   await showAbsenceListLoader(req);
   const { context, payload, env } = req;
@@ -64,7 +64,7 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
     const timeText = generateTimeText(
       new Date(event.start.date),
       subDays(new Date(event.end.date), 1),
-      dayPart
+      dayPart,
     );
     absenceBlocks.push({
       type: "section",

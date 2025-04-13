@@ -6,7 +6,6 @@ import { IRequest, RequestHandler } from "itty-router";
 export const migrateEventName: RequestHandler<IRequest, CFArgs> = async (
   request,
   env,
-  context
 ) => {
   const currentName = "Tin";
   const newName = "Tin";
@@ -30,7 +29,7 @@ export const migrateEventName: RequestHandler<IRequest, CFArgs> = async (
         body: JSON.stringify({
           summary: event.summary.replace(currentName, newName),
         }),
-      }
+      },
     );
     const json = await response.json();
     console.log(json);

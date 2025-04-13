@@ -190,7 +190,7 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
         },
         transparency: "transparent",
       }),
-    }
+    },
   );
 
   if (!newEventResponse.ok && newMessage.message?.ts) {
