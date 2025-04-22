@@ -1,4 +1,4 @@
-import { findUserById } from "@/helpers";
+import { findUserByEmail } from "@/helpers";
 import { getUsers } from "@/services/getUsers";
 import { Env } from "@/types";
 import { ViewSubmissionLazyHandler } from "slack-edge";
@@ -9,8 +9,14 @@ export const deleteMessageFromModal: ViewSubmissionLazyHandler<Env> = async ({
   env,
 }) => {
   const { messageTs } = JSON.parse(payload.view.private_metadata);
-  const users = await getUsers({ env });
-  const actionUser = findUserById({ users, id: payload.user.id });
+  const [users, { user: slackUser }] = await Promise.all([
+    getUsers({ env }),
+    context.client.users.info({ user: payload.user.id }),
+  ]);
+  const actionUser = findUserByEmail({
+    users,
+    email: slackUser?.profile?.email || "",
+  });
   if (!actionUser?.["Admin"]) {
     await context.client.views.open({
       trigger_id: payload.trigger_id,

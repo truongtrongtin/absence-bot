@@ -22,7 +22,6 @@ export enum DayPart {
 }
 
 export type User = {
-  "Slack Member ID": string;
   Email: string;
   Name: string;
   Admin: boolean;

@@ -1,4 +1,9 @@
-import { addDays, findUserById, formatDate, generateTimeText } from "@/helpers";
+import {
+  addDays,
+  findUserByEmail,
+  formatDate,
+  generateTimeText,
+} from "@/helpers";
 import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
 import { getUsers } from "@/services/getUsers";
 import { DayPart, Env } from "@/types";
@@ -11,8 +16,16 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   const { targetUserId, startDateString, endDateString, dayPart, reason } =
     JSON.parse(payload.actions[0].value);
   const actionUserId = payload.user.id;
-  const users = await getUsers({ env });
-  const actionUser = findUserById({ users, id: actionUserId });
+  const [users, { user: slackActionUser }, { user: slackTargetUser }] =
+    await Promise.all([
+      getUsers({ env }),
+      context.client.users.info({ user: actionUserId }),
+      context.client.users.info({ user: targetUserId }),
+    ]);
+  const actionUser = findUserByEmail({
+    users,
+    email: slackActionUser?.profile?.email || "",
+  });
 
   if (targetUserId !== actionUserId && !actionUser?.["Admin"]) {
     await context.client.views.open({
@@ -45,7 +58,10 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   const threadTs = payload.message.ts;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-  const targetUser = findUserById({ users, id: targetUserId });
+  const targetUser = findUserByEmail({
+    users,
+    email: slackTargetUser?.profile?.email || "",
+  });
   if (!targetUser) throw Error("target user not found");
 
   const accessToken = await getAccessTokenFromRefreshToken({ env });

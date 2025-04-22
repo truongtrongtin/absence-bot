@@ -1,6 +1,6 @@
 import {
   addDays,
-  findUserById,
+  findUserByEmail,
   formatDate,
   generateTimeText,
   getToday,
@@ -142,8 +142,14 @@ export const createAbsenceFromModal: ViewSubmissionLazyHandler<Env> = async ({
   }
 
   const reason = view.state.values["reason-block"]["reason-action"].value || "";
-  const users = await getUsers({ env });
-  const targetUser = findUserById({ users, id: actionUserId });
+  const [users, { user: slackActionUser }] = await Promise.all([
+    getUsers({ env }),
+    context.client.users.info({ user: actionUserId }),
+  ]);
+  const targetUser = findUserByEmail({
+    users,
+    email: slackActionUser?.profile?.email || "",
+  });
   if (!targetUser) throw Error("target user not found");
 
   const accessToken = await getAccessTokenFromRefreshToken({ env });

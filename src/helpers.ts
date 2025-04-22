@@ -66,26 +66,6 @@ export function findUserByEmail({
   return users.find((user) => user["Email"] === email);
 }
 
-export function findUserById({
-  users,
-  id,
-}: {
-  users: User[];
-  id: User["Email"];
-}) {
-  return users.find((user) => user["Slack Member ID"] === id);
-}
-
-export function findUserByName({
-  users,
-  name,
-}: {
-  users: User[];
-  name: User["Name"];
-}) {
-  return users.find((user) => user["Name"] === name);
-}
-
 export function getToday() {
   const today = new Date();
   // Asia/Ho_Chi_Minh
