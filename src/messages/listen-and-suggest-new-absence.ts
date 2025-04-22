@@ -9,7 +9,7 @@ import { AbsencePayload, DayPart, Env } from "@/types";
 import * as chrono from "chrono-node/en";
 import { EventLazyHandler } from "slack-edge";
 
-export const postSuggestionFromMessage: EventLazyHandler<
+export const listenAndSuggestNewAbsence: EventLazyHandler<
   "message",
   Env
 > = async ({ context, payload, env }) => {
@@ -171,7 +171,7 @@ export const postSuggestionFromMessage: EventLazyHandler<
           elements: [
             {
               type: "button",
-              action_id: "absence-suggestion-yes",
+              action_id: "create_absence_from_suggestion",
               text: {
                 type: "plain_text",
                 emoji: true,
@@ -198,7 +198,7 @@ export const postSuggestionFromMessage: EventLazyHandler<
             },
             {
               type: "button",
-              action_id: "absence-new",
+              action_id: "open_new_absence_modal",
               text: {
                 type: "plain_text",
                 emoji: true,

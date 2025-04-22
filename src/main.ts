@@ -1,29 +1,29 @@
-import { backToHome } from "@/actions/backToHome";
-import { createAbsenceFromSuggestion } from "@/actions/createAbsenceFromSuggestion";
-import { deleteAbsenceFromAppHome } from "@/actions/deleteAbsenceFromAppHome";
-import { showAbsenceList } from "@/actions/showAbsenceList";
-import { showCreateAbsenceModalFromSuggestion } from "@/actions/showCreateAbsenceModalFromSuggestion";
+import { backToHome } from "@/actions/back-to-home";
+import { createAbsenceFromSuggestion } from "@/actions/create-absence-from-suggestion";
+import { deleteAbsence } from "@/actions/delete-absence";
+import { openAbsenceList } from "@/actions/open-absence-list";
+import { openNewAbsenceModalFromButton } from "@/actions/open-new-absence-modal-from-button";
 import { events } from "@/controllers/events";
-import { getQuotes } from "@/controllers/getQuotes";
+import { getQuotes } from "@/controllers/get-quotes";
 import { users } from "@/controllers/users";
-import { appHomeOpened } from "@/events/appHomeOpened";
-import { memberJoinedChannel } from "@/events/memberJoinedChannel";
-import { postSuggestionFromMessage } from "@/messages/postSuggestionFromMessage";
-import { withUser } from "@/middlewares/withUser";
-import { reportTodayAbsences } from "@/services/reportTodayAbsences";
-import { showCreateAbsenceModalFromGlobalShortcut } from "@/shortcuts/showCreateAbsenceModalFromGlobalShortcut";
-import { showDeleteMessageModalFromMessageShortcut } from "@/shortcuts/showDeleteMessageModalFromMessageShortcut";
-import { showPostSuggestionModalFromMessageShortcut } from "@/shortcuts/showPostSuggestionModalFromMessageShortcut";
+import { appHomeOpened } from "@/events/app-home-opened";
+import { memberJoinedChannel } from "@/events/member-joined-channel";
+import { listenAndSuggestNewAbsence } from "@/messages/listen-and-suggest-new-absence";
+import { withUser } from "@/middlewares/with-user";
+import { reportTodayAbsences } from "@/services/report-today-absences";
+import { openBotMessageDeletionModal } from "@/shortcuts/open-bot-message-deletion-modal";
+import { openNewAbsenceModal } from "@/shortcuts/open-new-absence-modal";
+import { openNewSuggestionModal } from "@/shortcuts/open-new-suggestion-modal";
 import { CFArgs } from "@/types";
+import { deleteBotMessage } from "@/views/delete-bot-message";
 import {
-  createAbsenceFromModal,
-  createAbsenceFromModalAckHandler,
-} from "@/views/createAbsenceFromModal";
-import { deleteMessageFromModal } from "@/views/deleteMessageFromModal";
+  submitNewAbsence,
+  submitNewAbsenceAck,
+} from "@/views/submit-new-absence";
 import {
-  postSuggestionFromModal,
-  postSuggestionFromModalAckHandler,
-} from "@/views/postSuggestionFromModal";
+  submitNewSuggestion,
+  submitNewSuggestionAck,
+} from "@/views/submit-new-suggestion";
 import { AutoRouter, IRequest, cors } from "itty-router";
 import { SlackApp } from "slack-edge";
 
@@ -41,47 +41,43 @@ router.get("/report", reportTodayAbsences);
 router.post("/slack/events", (request, env, context) => {
   async function noopAckHandler() {}
   const app = new SlackApp({ env })
-    .action("absence-new", noopAckHandler, showCreateAbsenceModalFromSuggestion)
-    .action("app-home-absence-delete", noopAckHandler, deleteAbsenceFromAppHome)
     .action(
-      "absence-suggestion-yes",
+      "open_new_absence_modal",
+      noopAckHandler,
+      openNewAbsenceModalFromButton,
+    )
+    .action("delete_absence", noopAckHandler, deleteAbsence)
+    .action(
+      "create_absence_from_suggestion",
       noopAckHandler,
       createAbsenceFromSuggestion,
     )
-    .action("view-all-absences", noopAckHandler, showAbsenceList)
-    .action("back-to-home", noopAckHandler, backToHome)
-    .globalShortcut(
-      "global_new_absence",
-      noopAckHandler,
-      showCreateAbsenceModalFromGlobalShortcut,
-    )
+    .action("open_absence_list", noopAckHandler, openAbsenceList)
+    .action("back_to_home", noopAckHandler, backToHome)
+    .globalShortcut("global_new_absence", noopAckHandler, openNewAbsenceModal)
     .messageShortcut(
       "message_delete",
       noopAckHandler,
-      showDeleteMessageModalFromMessageShortcut,
+      openBotMessageDeletionModal,
     )
     .messageShortcut(
       "message_new_suggestion",
       noopAckHandler,
-      showPostSuggestionModalFromMessageShortcut,
+      openNewSuggestionModal,
     )
-    .anyMessage(postSuggestionFromMessage)
+    .anyMessage(listenAndSuggestNewAbsence)
     .event("app_home_opened", appHomeOpened)
     .event("member_joined_channel", memberJoinedChannel)
     .viewSubmission(
-      "new-suggestion-submit",
-      postSuggestionFromModalAckHandler,
-      postSuggestionFromModal,
+      "new_suggestion_submit",
+      submitNewSuggestionAck,
+      submitNewSuggestion,
     )
+    .viewSubmission("new_absence_submit", submitNewAbsenceAck, submitNewAbsence)
     .viewSubmission(
-      "new-absence-submit",
-      createAbsenceFromModalAckHandler,
-      createAbsenceFromModal,
-    )
-    .viewSubmission(
-      "delete-message-submit",
+      "delete_message_submit",
       async () => ({ response_action: "clear" }),
-      deleteMessageFromModal,
+      deleteBotMessage,
     );
   return app.run(request, context);
 });

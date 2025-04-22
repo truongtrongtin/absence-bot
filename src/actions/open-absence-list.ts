@@ -7,8 +7,8 @@ import {
   startOfDay,
   subDays,
 } from "@/helpers";
-import { getEvents } from "@/services/getEvents";
-import { getUsers } from "@/services/getUsers";
+import { getEvents } from "@/services/get-events";
+import { getUsers } from "@/services/get-users";
 import { Env } from "@/types";
 import {
   BlockActionAckHandler,
@@ -17,7 +17,7 @@ import {
   SectionBlock,
 } from "slack-edge";
 
-export const showAbsenceListLoader: BlockActionAckHandler<"button"> = async ({
+export const openAbsenceListAck: BlockActionAckHandler<"button"> = async ({
   context,
   payload,
 }) => {
@@ -39,10 +39,10 @@ export const showAbsenceListLoader: BlockActionAckHandler<"button"> = async ({
   });
 };
 
-export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
+export const openAbsenceList: BlockActionLazyHandler<"button", Env> = async (
   req,
 ) => {
-  await showAbsenceListLoader(req);
+  await openAbsenceListAck(req);
   const { context, payload, env } = req;
   if (!context.actorUserId) return;
   const [users, { user: slackUser }] = await Promise.all([
@@ -77,7 +77,7 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
           },
           accessory: {
             type: "button",
-            action_id: "back-to-home",
+            action_id: "back_to_home",
             text: {
               type: "plain_text",
               text: "Back",
@@ -117,7 +117,7 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
                   },
                   accessory: {
                     type: "button",
-                    action_id: "app-home-absence-delete",
+                    action_id: "delete_absence",
                     text: {
                       type: "plain_text",
                       text: "Delete",

@@ -4,7 +4,7 @@ type TokenObject = {
   access_token: string;
 };
 
-export async function getAccessTokenFromRefreshToken({ env }: { env: Env }) {
+export async function getAccessToken({ env }: { env: Env }) {
   const response = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST",
     body: JSON.stringify({

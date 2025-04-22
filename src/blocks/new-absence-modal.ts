@@ -1,41 +1,15 @@
+import { dayPartOptions } from "@/blocks/day-part-options";
 import { formatDate, getToday } from "@/helpers";
-import { AbsencePayload, DayPart } from "@/types";
-import { AnyDescriptionOption, ModalView } from "slack-edge";
+import { AbsencePayload } from "@/types";
+import { ModalView } from "slack-edge";
 
-export function createAbsenceView(absencePayload?: AbsencePayload): ModalView {
+export function newAbsenceModal(absencePayload?: AbsencePayload): ModalView {
   const isSingleMode =
     absencePayload?.startDateString === absencePayload?.endDateString;
 
-  const dayPartOptions: AnyDescriptionOption[] = [
-    {
-      text: {
-        type: "plain_text",
-        text: ":beach_with_umbrella: Full",
-        emoji: true,
-      },
-      value: DayPart.FULL,
-    },
-    {
-      text: {
-        type: "plain_text",
-        text: `:sunny: Morning`,
-        emoji: true,
-      },
-      value: DayPart.MORNING,
-    },
-    {
-      text: {
-        type: "plain_text",
-        text: ":city_sunset: Afternoon",
-        emoji: true,
-      },
-      value: DayPart.AFTERNOON,
-    },
-  ];
-
   return {
     type: "modal",
-    callback_id: "new-absence-submit",
+    callback_id: "new_absence_submit",
     // notify_on_close: true,
     // private_metadata: privateMetadata,
     title: {
@@ -55,10 +29,10 @@ export function createAbsenceView(absencePayload?: AbsencePayload): ModalView {
     blocks: [
       {
         type: "input",
-        block_id: "start-date-block",
+        block_id: "start_date_block",
         element: {
           type: "datepicker",
-          action_id: "start-date-action",
+          action_id: "start_date_action",
           focus_on_load: true,
           initial_date:
             absencePayload?.startDateString || formatDate(getToday()),
@@ -71,11 +45,11 @@ export function createAbsenceView(absencePayload?: AbsencePayload): ModalView {
       },
       {
         type: "input",
-        block_id: "end-date-block",
+        block_id: "end_date_block",
         optional: true,
         element: {
           type: "datepicker",
-          action_id: "end-date-action",
+          action_id: "end_date_action",
           ...(absencePayload?.endDateString && !isSingleMode
             ? { initial_date: absencePayload.endDateString }
             : {}),
@@ -88,14 +62,14 @@ export function createAbsenceView(absencePayload?: AbsencePayload): ModalView {
       },
       {
         type: "input",
-        block_id: "day-part-block",
+        block_id: "day_part_block",
         element: {
           type: "radio_buttons",
           initial_option:
             dayPartOptions.find((o) => o.value === absencePayload?.dayPart) ||
             dayPartOptions[0],
           options: dayPartOptions,
-          action_id: "day-part-action",
+          action_id: "day_part_action",
         },
         label: {
           type: "plain_text",
@@ -105,13 +79,13 @@ export function createAbsenceView(absencePayload?: AbsencePayload): ModalView {
       },
       {
         type: "input",
-        block_id: "reason-block",
+        block_id: "reason_block",
         optional: true,
 
         element: {
           initial_value: absencePayload?.reason || "",
           type: "plain_text_input",
-          action_id: "reason-action",
+          action_id: "reason_action",
           placeholder: {
             type: "plain_text",
             text: "Share your reason",

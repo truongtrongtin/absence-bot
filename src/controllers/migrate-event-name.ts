@@ -1,5 +1,5 @@
-import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
-import { getEvents } from "@/services/getEvents";
+import { getAccessToken } from "@/services/get-acess-token";
+import { getEvents } from "@/services/get-events";
 import { CFArgs } from "@/types";
 import { IRequest, RequestHandler } from "itty-router";
 
@@ -15,7 +15,7 @@ export const migrateEventName: RequestHandler<IRequest, CFArgs> = async (
     singleEvents: "true",
   });
   const events = await getEvents({ query, env });
-  const accessToken = await getAccessTokenFromRefreshToken({ env });
+  const accessToken = await getAccessToken({ env });
 
   for (const event of events) {
     const response = await fetch(

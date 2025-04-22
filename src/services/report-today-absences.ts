@@ -5,7 +5,7 @@ import {
   getUserNameFromEventSummary,
   startOfDay,
 } from "@/helpers";
-import { getEvents } from "@/services/getEvents";
+import { getEvents } from "@/services/get-events";
 import { CalendarEvent, Env } from "@/types";
 import { SlackAPIClient } from "slack-edge";
 

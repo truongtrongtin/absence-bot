@@ -1,15 +1,14 @@
-import { showAbsenceList } from "@/actions/showAbsenceList";
-import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
+import { openAbsenceList } from "@/actions/open-absence-list";
+import { getAccessToken } from "@/services/get-acess-token";
 import { Env } from "@/types";
 import { BlockActionLazyHandler } from "slack-edge";
 
-export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
-  "button",
-  Env
-> = async (req) => {
+export const deleteAbsence: BlockActionLazyHandler<"button", Env> = async (
+  req,
+) => {
   const { context, payload, env } = req;
   const { eventId, message_ts } = JSON.parse(payload.actions[0].value);
-  const accessToken = await getAccessTokenFromRefreshToken({ env });
+  const accessToken = await getAccessToken({ env });
 
   // Delete absence event from google calendar
   await fetch(
@@ -28,5 +27,5 @@ export const deleteAbsenceFromAppHome: BlockActionLazyHandler<
     });
   }
 
-  await showAbsenceList(req);
+  await openAbsenceList(req);
 };

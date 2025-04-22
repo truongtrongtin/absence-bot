@@ -1,4 +1,4 @@
-import { getEvents } from "@/services/getEvents";
+import { getEvents } from "@/services/get-events";
 import { CFArgs, User } from "@/types";
 import { IRequest, RequestHandler } from "itty-router";
 

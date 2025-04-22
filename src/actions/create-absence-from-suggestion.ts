@@ -4,8 +4,8 @@ import {
   formatDate,
   generateTimeText,
 } from "@/helpers";
-import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
-import { getUsers } from "@/services/getUsers";
+import { getAccessToken } from "@/services/get-acess-token";
+import { getUsers } from "@/services/get-users";
 import { DayPart, Env } from "@/types";
 import { BlockActionLazyHandler } from "slack-edge";
 
@@ -64,7 +64,7 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   });
   if (!targetUser) throw Error("target user not found");
 
-  const accessToken = await getAccessTokenFromRefreshToken({ env });
+  const accessToken = await getAccessToken({ env });
   const dayPartText = dayPart === DayPart.FULL ? "(off)" : `(off ${dayPart})`;
   const summary = `${targetUser["Name"]} ${dayPartText}`;
   const timeText = generateTimeText(startDate, endDate, dayPart);

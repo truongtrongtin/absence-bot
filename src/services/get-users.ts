@@ -1,9 +1,9 @@
 import { getToday } from "@/helpers";
-import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
+import { getAccessToken } from "@/services/get-acess-token";
 import { Env, User } from "@/types";
 
 export const getUsers = async ({ env }: { env: Env }) => {
-  const accessToken = await getAccessTokenFromRefreshToken({ env });
+  const accessToken = await getAccessToken({ env });
   const sheetName = getToday().getFullYear().toString();
   const query = new URLSearchParams({
     valueRenderOption: "UNFORMATTED_VALUE",

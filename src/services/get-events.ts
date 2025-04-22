@@ -1,4 +1,4 @@
-import { getAccessTokenFromRefreshToken } from "@/services/getAccessTokenFromRefreshToken";
+import { getAccessToken } from "@/services/get-acess-token";
 import { CalendarEvent, CalendarListResponse, Env } from "@/types";
 
 export const getEvents = async ({
@@ -8,7 +8,7 @@ export const getEvents = async ({
   query: URLSearchParams;
   env: Env;
 }) => {
-  const accessToken = await getAccessTokenFromRefreshToken({ env });
+  const accessToken = await getAccessToken({ env });
   let events: CalendarEvent[] = [];
   query.set("maxResults", "2500");
   do {

@@ -1,6 +1,6 @@
 import { HomeTabView } from "slack-edge";
 
-export function appHomeView(): HomeTabView {
+export function appHome(): HomeTabView {
   return {
     type: "home",
     blocks: [
@@ -9,7 +9,7 @@ export function appHomeView(): HomeTabView {
         elements: [
           {
             type: "button",
-            action_id: "absence-new",
+            action_id: "open_new_absence_modal",
             text: {
               type: "plain_text",
               text: "New Absence",
@@ -24,7 +24,7 @@ export function appHomeView(): HomeTabView {
         elements: [
           {
             type: "button",
-            action_id: "view-all-absences",
+            action_id: "open_absence_list",
             text: {
               type: "plain_text",
               text: "View My Absences",

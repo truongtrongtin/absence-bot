@@ -10,28 +10,28 @@ import {
   ViewSubmissionLazyHandler,
 } from "slack-edge";
 
-export const postSuggestionFromModalAckHandler: ViewSubmissionAckHandler<
-  Env
-> = async ({ payload }) => {
+export const submitNewSuggestionAck: ViewSubmissionAckHandler<Env> = async ({
+  payload,
+}) => {
   const view = payload.view;
   const startDateString =
-    view.state.values["start-date-block"]["start-date-action"].selected_date;
+    view.state.values["start_date_block"]["start_date_action"].selected_date;
 
   if (!startDateString) {
     return {
       response_action: "errors",
       errors: {
-        "start-date-block": "Start date is required",
-        "end-date-block": "",
-        "day-part-block": "",
+        start_date_block: "Start date is required",
+        end_date_block: "",
+        day_part_block: "",
       },
     };
   }
 
   const endDateString =
-    view.state.values["end-date-block"]["end-date-action"].selected_date ||
+    view.state.values["end_date_block"]["end_date_action"].selected_date ||
     startDateString;
-  const dayPart = view.state.values["day-part-block"]["day-part-action"]
+  const dayPart = view.state.values["day_part_block"]["day_part_action"]
     .selected_option?.value as DayPart;
 
   const isSingleMode = startDateString === endDateString;
@@ -44,18 +44,18 @@ export const postSuggestionFromModalAckHandler: ViewSubmissionAckHandler<
       return {
         response_action: "errors",
         errors: {
-          "start-date-block": "Not allow weekend",
-          "end-date-block": "",
-          "day-part-block": "",
+          start_date_block: "Not allow weekend",
+          end_date_block: "",
+          day_part_block: "",
         },
       };
     } else {
       return {
         response_action: "errors",
         errors: {
-          "start-date-block": "Not allow weekend in range",
-          "end-date-block": "Not allow weekend in range",
-          "day-part-block": "",
+          start_date_block: "Not allow weekend in range",
+          end_date_block: "Not allow weekend in range",
+          day_part_block: "",
         },
       };
     }
@@ -65,9 +65,9 @@ export const postSuggestionFromModalAckHandler: ViewSubmissionAckHandler<
     return {
       response_action: "errors",
       errors: {
-        "start-date-block": "",
-        "end-date-block": "Must not be earlier than start date",
-        "day-part-block": "",
+        start_date_block: "",
+        end_date_block: "Must not be earlier than start date",
+        day_part_block: "",
       },
     };
   }
@@ -76,9 +76,9 @@ export const postSuggestionFromModalAckHandler: ViewSubmissionAckHandler<
     return {
       response_action: "errors",
       errors: {
-        "start-date-block": "Must not be later than 1 year from now",
-        "end-date-block": "",
-        "day-part-block": "",
+        start_date_block: "Must not be later than 1 year from now",
+        end_date_block: "",
+        day_part_block: "",
       },
     };
   }
@@ -87,9 +87,9 @@ export const postSuggestionFromModalAckHandler: ViewSubmissionAckHandler<
     return {
       response_action: "errors",
       errors: {
-        "start-date-block": "",
-        "end-date-block": "Must not be later than 1 year from now",
-        "day-part-block": "",
+        start_date_block: "",
+        end_date_block: "Must not be later than 1 year from now",
+        day_part_block: "",
       },
     };
   }
@@ -98,9 +98,9 @@ export const postSuggestionFromModalAckHandler: ViewSubmissionAckHandler<
     return {
       response_action: "errors",
       errors: {
-        "start-date-block": "",
-        "end-date-block": "",
-        "day-part-block": "This option is not supported in multi-date mode",
+        start_date_block: "",
+        end_date_block: "",
+        day_part_block: "This option is not supported in multi-date mode",
       },
     };
   }
@@ -108,19 +108,19 @@ export const postSuggestionFromModalAckHandler: ViewSubmissionAckHandler<
   return { response_action: "clear" };
 };
 
-export const postSuggestionFromModal: ViewSubmissionLazyHandler<Env> = async ({
+export const submitNewSuggestion: ViewSubmissionLazyHandler<Env> = async ({
   payload,
   context,
   env,
 }) => {
   const view = payload.view;
   const startDateString =
-    view.state.values["start-date-block"]["start-date-action"].selected_date;
+    view.state.values["start_date_block"]["start_date_action"].selected_date;
   if (!startDateString) return;
   const endDateString =
-    view.state.values["end-date-block"]["end-date-action"].selected_date ||
+    view.state.values["end_date_block"]["end_date_action"].selected_date ||
     startDateString;
-  const dayPart = view.state.values["day-part-block"]["day-part-action"]
+  const dayPart = view.state.values["day_part_block"]["day_part_action"]
     .selected_option?.value as DayPart;
   const isSingleMode = startDateString === endDateString;
   const startDate = new Date(startDateString);
@@ -168,7 +168,7 @@ export const postSuggestionFromModal: ViewSubmissionLazyHandler<Env> = async ({
         elements: [
           {
             type: "button",
-            action_id: "absence-suggestion-yes",
+            action_id: "create_absence_from_suggestion",
             text: {
               type: "plain_text",
               emoji: true,
@@ -195,7 +195,7 @@ export const postSuggestionFromModal: ViewSubmissionLazyHandler<Env> = async ({
           },
           {
             type: "button",
-            action_id: "absence-new",
+            action_id: "open_new_absence_modal",
             text: {
               type: "plain_text",
               emoji: true,
