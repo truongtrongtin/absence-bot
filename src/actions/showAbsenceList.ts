@@ -1,5 +1,5 @@
 import {
-  findUserById,
+  findUserByEmail,
   generateTimeText,
   getDayPartFromEventSummary,
   getToday,
@@ -11,9 +11,10 @@ import { getEvents } from "@/services/getEvents";
 import { getUsers } from "@/services/getUsers";
 import { Env } from "@/types";
 import {
-  AnyHomeTabBlock,
   BlockActionAckHandler,
   BlockActionLazyHandler,
+  DividerBlock,
+  SectionBlock,
 } from "slack-edge";
 
 export const showAbsenceListLoader: BlockActionAckHandler<"button"> = async ({
@@ -44,8 +45,14 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
   await showAbsenceListLoader(req);
   const { context, payload, env } = req;
   if (!context.actorUserId) return;
-  const users = await getUsers({ env });
-  const targetUser = findUserById({ users, id: context.actorUserId });
+  const [users, { user: slackUser }] = await Promise.all([
+    getUsers({ env }),
+    context.client.users.info({ user: payload.user.id }),
+  ]);
+  const targetUser = findUserByEmail({
+    users,
+    email: slackUser?.profile?.email || "",
+  });
   if (!targetUser) return;
 
   // Get future absences from google calendar
@@ -56,68 +63,6 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
     singleEvents: "true",
   });
   const absenceEvents = await getEvents({ env, query });
-
-  const absenceBlocks: AnyHomeTabBlock[] = [];
-  for (const event of absenceEvents) {
-    const dayPart = getDayPartFromEventSummary(event.summary);
-    const userName = getUserNameFromEventSummary(event.summary);
-    const timeText = generateTimeText(
-      new Date(event.start.date),
-      subDays(new Date(event.end.date), 1),
-      dayPart,
-    );
-    absenceBlocks.push({
-      type: "section",
-      text: {
-        type: "mrkdwn",
-        text: `*${userName}*\n${timeText}`,
-        verbatim: true,
-      },
-      accessory: {
-        type: "button",
-        action_id: "app-home-absence-delete",
-        text: {
-          type: "plain_text",
-          text: "Delete",
-          emoji: true,
-        },
-        style: "danger",
-        value: JSON.stringify({
-          eventId: event.id,
-          message_ts: event.extendedProperties?.private?.message_ts || "",
-        }),
-        confirm: {
-          title: {
-            type: "plain_text",
-            text: "Delete absence",
-            emoji: true,
-          },
-          text: {
-            type: "plain_text",
-            text: "Are you sure you want to delete this absence? This cannot be undone.",
-          },
-          confirm: {
-            type: "plain_text",
-            text: "Delete",
-            emoji: true,
-          },
-          style: "danger",
-        },
-      },
-    });
-    absenceBlocks.push({
-      type: "divider",
-    });
-  }
-  if (absenceEvents.length === 0) {
-    absenceBlocks.push({
-      type: "section",
-      text: {
-        type: "mrkdwn",
-        text: "Nothing to show",
-      },
-    });
-  }
 
   await context.client.views.publish({
     user_id: payload.user.id,
@@ -143,7 +88,71 @@ export const showAbsenceList: BlockActionLazyHandler<"button", Env> = async (
         {
           type: "divider",
         },
-        ...absenceBlocks,
+        ...(absenceEvents.length === 0
+          ? ([
+              {
+                type: "section",
+                text: {
+                  type: "mrkdwn",
+                  text: "Nothing to show",
+                },
+              },
+            ] satisfies [SectionBlock])
+          : absenceEvents.flatMap((event) => {
+              const dayPart = getDayPartFromEventSummary(event.summary);
+              const userName = getUserNameFromEventSummary(event.summary);
+              const timeText = generateTimeText(
+                new Date(event.start.date),
+                subDays(new Date(event.end.date), 1),
+                dayPart,
+              );
+
+              return [
+                {
+                  type: "section",
+                  text: {
+                    type: "mrkdwn",
+                    text: `*${userName}*\n${timeText}`,
+                    verbatim: true,
+                  },
+                  accessory: {
+                    type: "button",
+                    action_id: "app-home-absence-delete",
+                    text: {
+                      type: "plain_text",
+                      text: "Delete",
+                      emoji: true,
+                    },
+                    style: "danger",
+                    value: JSON.stringify({
+                      eventId: event.id,
+                      message_ts:
+                        event.extendedProperties?.private?.message_ts || "",
+                    }),
+                    confirm: {
+                      title: {
+                        type: "plain_text",
+                        text: "Delete absence",
+                        emoji: true,
+                      },
+                      text: {
+                        type: "plain_text",
+                        text: "Are you sure you want to delete this absence? This cannot be undone.",
+                      },
+                      confirm: {
+                        type: "plain_text",
+                        text: "Delete",
+                        emoji: true,
+                      },
+                      style: "danger",
+                    },
+                  },
+                },
+                {
+                  type: "divider",
+                },
+              ] satisfies [SectionBlock, DividerBlock];
+            })),
       ],
     },
   });
