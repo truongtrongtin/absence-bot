@@ -155,7 +155,7 @@ export const submitNewAbsence: ViewSubmissionLazyHandler<Env> = async ({
   const accessToken = await getAccessToken({ env });
   const dayPartText = dayPart === DayPart.FULL ? "(off)" : `(off ${dayPart})`;
   const summary = `${targetUser["Name"]} ${dayPartText}`;
-  const timeText = generateTimeText(startDate, endDate, dayPart);
+  const timeText = generateTimeText({ startDate, endDate, dayPart });
   const trimmedReason = reason.trim();
   const messageText = trimmedReason ? ` Reason: ${reason}` : "";
 

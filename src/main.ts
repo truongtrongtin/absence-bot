@@ -1,8 +1,8 @@
 import { backToHome } from "@/actions/back-to-home";
 import { createAbsenceFromSuggestion } from "@/actions/create-absence-from-suggestion";
-import { deleteAbsence } from "@/actions/delete-absence";
 import { openAbsenceList } from "@/actions/open-absence-list";
 import { openNewAbsenceModalFromButton } from "@/actions/open-new-absence-modal-from-button";
+import { showDeleteAbsenceModal } from "@/actions/show-delete-absence-modal";
 import { events } from "@/controllers/events";
 import { getQuotes } from "@/controllers/get-quotes";
 import { users } from "@/controllers/users";
@@ -15,6 +15,7 @@ import { openBotMessageDeletionModal } from "@/shortcuts/open-bot-message-deleti
 import { openNewAbsenceModal } from "@/shortcuts/open-new-absence-modal";
 import { openNewSuggestionModal } from "@/shortcuts/open-new-suggestion-modal";
 import { CFArgs } from "@/types";
+import { deleteAbsence } from "@/views/delete-absence";
 import { deleteBotMessage } from "@/views/delete-bot-message";
 import {
   submitNewAbsence,
@@ -46,7 +47,7 @@ router.post("/slack/events", (request, env, context) => {
       noopAckHandler,
       openNewAbsenceModalFromButton,
     )
-    .action("delete_absence", noopAckHandler, deleteAbsence)
+    .action("show_delete_absence_modal", noopAckHandler, showDeleteAbsenceModal)
     .action(
       "create_absence_from_suggestion",
       noopAckHandler,
@@ -74,6 +75,7 @@ router.post("/slack/events", (request, env, context) => {
       submitNewSuggestion,
     )
     .viewSubmission("new_absence_submit", submitNewAbsenceAck, submitNewAbsence)
+    .viewSubmission("delete_absence_submit", noopAckHandler, deleteAbsence)
     .viewSubmission(
       "delete_message_submit",
       async () => ({ response_action: "clear" }),

@@ -14,11 +14,15 @@ export function getUserNameFromEventSummary(summary: CalendarEvent["summary"]) {
   return summary.split(" (off")[0];
 }
 
-export function generateTimeText(
-  startDate: Date,
-  endDate: Date,
-  dayPart: DayPart,
-) {
+export function generateTimeText({
+  startDate,
+  endDate,
+  dayPart,
+}: {
+  startDate: Date;
+  endDate: Date;
+  dayPart: DayPart;
+}) {
   const formatter = new Intl.DateTimeFormat("en-US", {
     weekday: "short",
     month: "short",
@@ -35,6 +39,36 @@ export function generateTimeText(
     }
   } else {
     timeText = `from ${niceStartDate} to ${niceEndDate}`;
+  }
+
+  return timeText;
+}
+
+export function generateTimeText2({
+  startDate,
+  endDate,
+  dayPart,
+}: {
+  startDate: Date;
+  endDate: Date;
+  dayPart: DayPart;
+}) {
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+  const niceStartDate = formatter.format(startDate);
+  const niceEndDate = formatter.format(endDate);
+  let timeText = "";
+
+  if (isSameDay(startDate, endDate)) {
+    timeText = niceStartDate;
+    if (dayPart !== DayPart.FULL) {
+      timeText += ` ${dayPart}`;
+    }
+  } else {
+    timeText = `${niceStartDate} - ${niceEndDate}`;
   }
 
   return timeText;

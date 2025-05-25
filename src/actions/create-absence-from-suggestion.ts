@@ -58,9 +58,6 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
     });
     return;
   }
-  if (!("channel" in payload)) return;
-  const channelId = payload.channel.id;
-  const threadTs = payload.message.ts;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
   const targetUser = findUserByEmail({
@@ -72,12 +69,12 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   const accessToken = await getAccessToken({ env });
   const dayPartText = dayPart === DayPart.FULL ? "(off)" : `(off ${dayPart})`;
   const summary = `${targetUser["Name"]} ${dayPartText}`;
-  const timeText = generateTimeText(startDate, endDate, dayPart);
+  const timeText = generateTimeText({ startDate, endDate, dayPart });
   const trimmedReason = reason.trim();
 
   const newMessage = await context.client.chat.postMessage({
-    channel: channelId,
-    thread_ts: threadTs,
+    channel: payload.channel.id,
+    thread_ts: payload.message.ts,
     text: `<@${targetUserId}> will be absent *${timeText}*.`,
   });
 

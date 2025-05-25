@@ -145,7 +145,7 @@ export const listenAndSuggestNewAbsence: EventLazyHandler<
     const isSingleMode = startDateString === endDateString;
     if (!isSingleMode && dayPart !== DayPart.FULL) return;
 
-    const timeText = generateTimeText(startDate, endDate, dayPart);
+    const timeText = generateTimeText({ startDate, endDate, dayPart });
     const text = `<@${message.user}>, are you going to be absent *${timeText}*?`;
     const absencePayload: AbsencePayload = {
       targetUserId: message.user,

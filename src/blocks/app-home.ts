@@ -17,11 +17,6 @@ export function appHome(): HomeTabView {
             },
             style: "primary",
           },
-        ],
-      },
-      {
-        type: "actions",
-        elements: [
           {
             type: "button",
             action_id: "open_absence_list",

@@ -10,10 +10,10 @@ export const openNewSuggestionModal: MessageShortcutLazyHandler = async ({
 
   await context.client.views.open({
     trigger_id: payload.trigger_id,
-    view: newSuggestionModal(
+    view: newSuggestionModal({
       targetUserId,
-      payload.message.text || "",
-      payload.message_ts,
-    ),
+      reason: payload.message.text || "",
+      messageTs: payload.message_ts,
+    }),
   });
 };

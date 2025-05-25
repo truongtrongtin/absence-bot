@@ -21,7 +21,7 @@ export const openBotMessageDeletionModal: MessageShortcutLazyHandler = async ({
       private_metadata: JSON.stringify({ messageTs }),
       title: {
         type: "plain_text",
-        text: "Delete confirm",
+        text: "Delete message confirm",
       },
       submit: {
         type: "plain_text",
@@ -38,7 +38,7 @@ export const openBotMessageDeletionModal: MessageShortcutLazyHandler = async ({
           type: "section",
           text: {
             type: "mrkdwn",
-            text: `${quote}\nAre you sure to delete this message?`,
+            text: `${quote}\nAre you sure you want to delete this message?`,
           },
         },
       ],

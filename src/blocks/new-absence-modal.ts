@@ -1,4 +1,4 @@
-import { dayPartOptions } from "@/blocks/day-part-options";
+import { dayPartOptions } from "@/options/day-part-options";
 import { formatDate, getToday } from "@/helpers";
 import { AbsencePayload } from "@/types";
 import { ModalView } from "slack-edge";

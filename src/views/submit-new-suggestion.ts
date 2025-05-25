@@ -145,7 +145,7 @@ export const submitNewSuggestion: ViewSubmissionLazyHandler<Env> = async ({
     reason,
     targetUserId,
   };
-  const timeText = generateTimeText(startDate, endDate, dayPart);
+  const timeText = generateTimeText({ startDate, endDate, dayPart });
   const text = `<@${targetUserId}>, are you going to be absent *${timeText}*?`;
   const quote = reason
     .split("\n")

@@ -1,12 +1,16 @@
-import { dayPartOptions } from "@/blocks/day-part-options";
 import { formatDate, getToday } from "@/helpers";
+import { dayPartOptions } from "@/options/day-part-options";
 import { ModalView } from "slack-edge";
 
-export function newSuggestionModal(
-  targetUserId: string,
-  reason: string,
-  messageTs: string,
-): ModalView {
+export function newSuggestionModal({
+  targetUserId,
+  reason,
+  messageTs,
+}: {
+  targetUserId: string;
+  reason: string;
+  messageTs: string;
+}): ModalView {
   return {
     type: "modal",
     callback_id: "new_suggestion_submit",
