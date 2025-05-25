@@ -7,11 +7,16 @@ import {
 import { getAccessToken } from "@/services/get-acess-token";
 import { getUsers } from "@/services/get-users";
 import { DayPart, Env } from "@/types";
-import { BlockActionLazyHandler } from "slack-edge";
+import {
+  BlockActionLazyHandler,
+  ButtonAction,
+  MessageBlockAction,
+} from "slack-edge";
 
 export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   "button",
-  Env
+  Env,
+  MessageBlockAction<ButtonAction>
 > = async ({ context, payload, env }) => {
   const { targetUserId, startDateString, endDateString, dayPart, reason } =
     JSON.parse(payload.actions[0].value);

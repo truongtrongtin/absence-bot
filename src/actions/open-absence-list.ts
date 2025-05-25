@@ -13,14 +13,17 @@ import { Env } from "@/types";
 import {
   BlockActionAckHandler,
   BlockActionLazyHandler,
+  ButtonAction,
   DividerBlock,
   SectionBlock,
+  ViewBlockAction,
 } from "slack-edge";
 
-export const openAbsenceListAck: BlockActionAckHandler<"button"> = async ({
-  context,
-  payload,
-}) => {
+export const openAbsenceListAck: BlockActionAckHandler<
+  "button",
+  Env,
+  ViewBlockAction<ButtonAction>
+> = async ({ context, payload }) => {
   await context.client.views.publish({
     user_id: payload.user.id,
     view: {
@@ -39,9 +42,11 @@ export const openAbsenceListAck: BlockActionAckHandler<"button"> = async ({
   });
 };
 
-export const openAbsenceList: BlockActionLazyHandler<"button", Env> = async (
-  req,
-) => {
+export const openAbsenceList: BlockActionLazyHandler<
+  "button",
+  Env,
+  ViewBlockAction<ButtonAction>
+> = async (req) => {
   await openAbsenceListAck(req);
   const { context, payload, env } = req;
   if (!context.actorUserId) return;

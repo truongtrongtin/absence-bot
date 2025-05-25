@@ -1,11 +1,17 @@
 import { openAbsenceList } from "@/actions/open-absence-list";
 import { getAccessToken } from "@/services/get-acess-token";
 import { Env } from "@/types";
-import { BlockActionLazyHandler } from "slack-edge";
+import {
+  BlockActionLazyHandler,
+  ButtonAction,
+  ViewBlockAction,
+} from "slack-edge";
 
-export const deleteAbsence: BlockActionLazyHandler<"button", Env> = async (
-  req,
-) => {
+export const deleteAbsence: BlockActionLazyHandler<
+  "button",
+  Env,
+  ViewBlockAction<ButtonAction>
+> = async (req) => {
   const { context, payload, env } = req;
   const { eventId, message_ts } = JSON.parse(payload.actions[0].value);
   const accessToken = await getAccessToken({ env });
