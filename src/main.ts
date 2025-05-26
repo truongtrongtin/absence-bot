@@ -4,6 +4,7 @@ import { openAbsenceList } from "@/actions/open-absence-list";
 import { openDeleteAbsenceModal } from "@/actions/open-delete-absence-modal";
 import { openLeaveBalanceModal } from "@/actions/open-leave-balance-modal";
 import { openNewAbsenceModalFromButton } from "@/actions/open-new-absence-modal-from-button";
+import { selectYear } from "@/actions/select-year";
 import { events } from "@/controllers/events";
 import { getQuotes } from "@/controllers/get-quotes";
 import { users } from "@/controllers/users";
@@ -55,6 +56,7 @@ router.post("/slack/events", (request, env, context) => {
     )
     .action("open_absence_list", noopAckHandler, openAbsenceList)
     .action("open_leave_balance_modal", noopAckHandler, openLeaveBalanceModal)
+    .action("select_year", noopAckHandler, selectYear)
     .action("back_to_home", noopAckHandler, backToHome)
     .globalShortcut("global_new_absence", noopAckHandler, openNewAbsenceModal)
     .messageShortcut(

@@ -5,6 +5,7 @@ export type DeleteAbsencePayload = {
   eventId: CalendarEvent["id"];
   message_ts: string;
   timeText: string;
+  year: number;
 };
 
 export function deleteAbsenceModal(

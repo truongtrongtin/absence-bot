@@ -1,36 +1,20 @@
 import { absenceList } from "@/blocks/absence-list";
-import { findUserByEmail, getToday } from "@/helpers";
+import { findUserByEmail } from "@/helpers";
 import { getEvents } from "@/services/get-events";
 import { getUsers } from "@/services/get-users";
-import type { Env } from "@/types";
-import type {
+import { Env } from "@/types";
+import {
   BlockActionLazyHandler,
-  ButtonAction,
+  StaticSelectAction,
   ViewBlockAction,
 } from "slack-edge";
 
-export const openAbsenceList: BlockActionLazyHandler<
-  "button",
+export const selectYear: BlockActionLazyHandler<
+  "static_select",
   Env,
-  ViewBlockAction<ButtonAction>
+  ViewBlockAction<StaticSelectAction>
 > = async ({ context, payload, env }) => {
-  await context.client.views.publish({
-    user_id: payload.user.id,
-    view: {
-      type: "home",
-      blocks: [
-        {
-          type: "section",
-          text: {
-            type: "plain_text",
-            text: "Loading...",
-            emoji: true,
-          },
-        },
-      ],
-    },
-  });
-
+  const year = Number(payload.actions[0].selected_option.value);
   const [users, { user: slackUser }] = await Promise.all([
     getUsers({ env }),
     context.client.users.info({ user: payload.user.id }),
@@ -41,10 +25,9 @@ export const openAbsenceList: BlockActionLazyHandler<
   });
   if (!targetUser) return;
 
-  const currentYear = getToday().getFullYear();
   const query = new URLSearchParams({
-    timeMin: new Date(currentYear, 0, 1).toISOString(),
-    timeMax: new Date(currentYear + 1, 0, 1).toISOString(),
+    timeMin: new Date(year, 0, 1).toISOString(),
+    timeMax: new Date(year + 1, 0, 1).toISOString(),
     q: `${targetUser["Name"]} (off`,
     orderBy: "startTime",
     singleEvents: "true",
@@ -53,6 +36,6 @@ export const openAbsenceList: BlockActionLazyHandler<
 
   await context.client.views.publish({
     user_id: payload.user.id,
-    view: absenceList({ absenceEvents, year: currentYear }),
+    view: absenceList({ absenceEvents, year }),
   });
 };

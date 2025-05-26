@@ -1,6 +1,6 @@
 import { absenceList } from "@/blocks/absence-list";
 import type { DeleteAbsencePayload } from "@/blocks/delete-absence-modal";
-import { findUserByEmail, getToday, startOfDay } from "@/helpers";
+import { findUserByEmail } from "@/helpers";
 import { getAccessToken } from "@/services/get-acess-token";
 import { getEvents } from "@/services/get-events";
 import { getUsers } from "@/services/get-users";
@@ -22,7 +22,7 @@ export const deleteAbsence: ViewSubmissionLazyHandler<Env> = async ({
   });
   if (!targetUser) return;
 
-  const { eventId, message_ts }: DeleteAbsencePayload = JSON.parse(
+  const { eventId, message_ts, year }: DeleteAbsencePayload = JSON.parse(
     payload.view.private_metadata,
   );
   const accessToken = await getAccessToken({ env });
@@ -44,9 +44,9 @@ export const deleteAbsence: ViewSubmissionLazyHandler<Env> = async ({
     });
   }
 
-  // Get future absences from google calendar
   const query = new URLSearchParams({
-    timeMin: startOfDay(getToday()).toISOString(),
+    timeMin: new Date(year, 0, 1).toISOString(),
+    timeMax: new Date(year + 1, 0, 1).toISOString(),
     q: `${targetUser["Name"]} (off`,
     orderBy: "startTime",
     singleEvents: "true",
@@ -55,6 +55,6 @@ export const deleteAbsence: ViewSubmissionLazyHandler<Env> = async ({
 
   await context.client.views.publish({
     user_id: payload.user.id,
-    view: absenceList({ absenceEvents }),
+    view: absenceList({ absenceEvents, year }),
   });
 };

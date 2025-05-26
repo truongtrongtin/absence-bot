@@ -47,6 +47,10 @@
     }
   },
   "settings": {
+    "event_subscriptions": {
+      "request_url": "https://example.com/slack/events",
+      "bot_events": ["app_home_opened"]
+    },
     "interactivity": {
       "is_enabled": true,
       "request_url": "https://example.com/slack/events"
