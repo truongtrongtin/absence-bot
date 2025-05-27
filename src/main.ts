@@ -1,6 +1,7 @@
 import { backToHome } from "@/actions/back-to-home";
 import { createAbsenceFromSuggestion } from "@/actions/create-absence-from-suggestion";
 import { openAbsenceList } from "@/actions/open-absence-list";
+import { openLeaveBalanceModal } from "@/actions/open-leave-balance-modal";
 import { openNewAbsenceModalFromButton } from "@/actions/open-new-absence-modal-from-button";
 import { showDeleteAbsenceModal } from "@/actions/show-delete-absence-modal";
 import { events } from "@/controllers/events";
@@ -54,6 +55,7 @@ router.post("/slack/events", (request, env, context) => {
       createAbsenceFromSuggestion,
     )
     .action("open_absence_list", noopAckHandler, openAbsenceList)
+    .action("open_leave_balance_modal", noopAckHandler, openLeaveBalanceModal)
     .action("back_to_home", noopAckHandler, backToHome)
     .globalShortcut("global_new_absence", noopAckHandler, openNewAbsenceModal)
     .messageShortcut(

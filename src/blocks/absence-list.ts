@@ -18,7 +18,7 @@ export function absenceList({
         type: "section",
         text: {
           type: "mrkdwn",
-          text: "*My Absences*",
+          text: "*My absences*",
         },
         accessory: {
           type: "button",

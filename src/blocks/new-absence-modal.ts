@@ -14,7 +14,7 @@ export function newAbsenceModal(absencePayload?: AbsencePayload): ModalView {
     // private_metadata: privateMetadata,
     title: {
       type: "plain_text",
-      text: "New Absence",
+      text: "New absence",
     },
     submit: {
       type: "plain_text",

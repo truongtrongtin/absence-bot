@@ -25,6 +25,7 @@ export type User = {
   Email: string;
   Name: string;
   Admin: boolean;
+  Balance: number;
 };
 
 export type CalendarEvent = {
