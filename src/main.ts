@@ -8,7 +8,6 @@ import { events } from "@/controllers/events";
 import { getQuotes } from "@/controllers/get-quotes";
 import { users } from "@/controllers/users";
 import { appHomeOpened } from "@/events/app-home-opened";
-import { memberJoinedChannel } from "@/events/member-joined-channel";
 import { listenAndSuggestNewAbsence } from "@/messages/listen-and-suggest-new-absence";
 import { withUser } from "@/middlewares/with-user";
 import { reportTodayAbsences } from "@/services/report-today-absences";
@@ -70,7 +69,6 @@ router.post("/slack/events", (request, env, context) => {
     )
     .anyMessage(listenAndSuggestNewAbsence)
     .event("app_home_opened", appHomeOpened)
-    .event("member_joined_channel", memberJoinedChannel)
     .viewSubmission(
       "new_suggestion_submit",
       submitNewSuggestionAck,
