@@ -5,9 +5,9 @@ import {
   getToday,
   isWeekendInRange,
 } from "@/helpers";
-import { AbsencePayload, DayPart, Env } from "@/types";
+import type { AbsencePayload, DayPart, Env } from "@/types";
 import * as chrono from "chrono-node/en";
-import { EventLazyHandler } from "slack-edge";
+import type { EventLazyHandler } from "slack-edge";
 
 export const listenAndSuggestNewAbsence: EventLazyHandler<
   "message",
@@ -126,24 +126,24 @@ export const listenAndSuggestNewAbsence: EventLazyHandler<
       return;
     }
 
-    let dayPart = DayPart.FULL;
+    let dayPart: DayPart = "full";
     if (
       startDate.getTime() ===
       new Date(new Date(startDate).setHours(6, 0, 0, 0)).getTime()
     ) {
-      dayPart = DayPart.MORNING;
+      dayPart = "morning";
     }
     if (
       startDate.getTime() ===
       new Date(new Date(startDate).setHours(15, 0, 0, 0)).getTime()
     ) {
-      dayPart = DayPart.AFTERNOON;
+      dayPart = "afternoon";
     }
 
     const startDateString = formatDate(startDate);
     const endDateString = formatDate(endDate);
     const isSingleMode = startDateString === endDateString;
-    if (!isSingleMode && dayPart !== DayPart.FULL) return;
+    if (!isSingleMode && dayPart !== "full") return;
 
     const timeText = generateTimeText({ startDate, endDate, dayPart });
     const text = `<@${message.user}>, are you going to be absent *${timeText}*?`;

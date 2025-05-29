@@ -8,8 +8,8 @@ import {
 } from "@/helpers";
 import { getAccessToken } from "@/services/get-acess-token";
 import { getUsers } from "@/services/get-users";
-import { DayPart, Env } from "@/types";
-import {
+import type { DayPart, Env } from "@/types";
+import type {
   ViewSubmissionAckHandler,
   ViewSubmissionLazyHandler,
 } from "slack-edge";
@@ -96,7 +96,7 @@ export const submitNewAbsenceAck: ViewSubmissionAckHandler<Env> = async ({
     };
   }
 
-  if (!isSingleMode && dayPart !== DayPart.FULL) {
+  if (!isSingleMode && dayPart !== "full") {
     return {
       response_action: "errors",
       errors: {
@@ -133,7 +133,7 @@ export const submitNewAbsence: ViewSubmissionLazyHandler<Env> = async ({
 
   if (
     endDate < startDate ||
-    (!isSingleMode && dayPart !== DayPart.FULL) ||
+    (!isSingleMode && dayPart !== "full") ||
     isWeekendInRange(startDate, endDate) ||
     startDate > addDays(today, 365) ||
     endDate > addDays(today, 365)
@@ -153,7 +153,7 @@ export const submitNewAbsence: ViewSubmissionLazyHandler<Env> = async ({
   if (!targetUser) throw Error("target user not found");
 
   const accessToken = await getAccessToken({ env });
-  const dayPartText = dayPart === DayPart.FULL ? "(off)" : `(off ${dayPart})`;
+  const dayPartText = dayPart === "full" ? "(off)" : `(off ${dayPart})`;
   const summary = `${targetUser["Name"]} ${dayPartText}`;
   const timeText = generateTimeText({ startDate, endDate, dayPart });
   const trimmedReason = reason.trim();

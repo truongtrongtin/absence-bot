@@ -1,6 +1,6 @@
 import { appHome } from "@/blocks/app-home";
-import { Env } from "@/types";
-import { EventLazyHandler } from "slack-edge";
+import type { Env } from "@/types";
+import type { EventLazyHandler } from "slack-edge";
 
 export const appHomeOpened: EventLazyHandler<"app_home_opened", Env> = async ({
   context,

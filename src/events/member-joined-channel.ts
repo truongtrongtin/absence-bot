@@ -1,5 +1,5 @@
-import { Env } from "@/types";
-import { EventLazyHandler } from "slack-edge";
+import type { Env } from "@/types";
+import type { EventLazyHandler } from "slack-edge";
 
 export const memberJoinedChannel: EventLazyHandler<
   "member_joined_channel",

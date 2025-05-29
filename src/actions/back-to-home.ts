@@ -1,6 +1,6 @@
 import { appHome } from "@/blocks/app-home";
-import { Env } from "@/types";
-import {
+import type { Env } from "@/types";
+import type {
   BlockActionLazyHandler,
   ButtonAction,
   ViewBlockAction,

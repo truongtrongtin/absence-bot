@@ -1,6 +1,6 @@
 import { newAbsenceModal } from "@/blocks/new-absence-modal";
-import { Env } from "@/types";
-import { GlobalShortcutLazyHandler } from "slack-edge";
+import type { Env } from "@/types";
+import type { GlobalShortcutLazyHandler } from "slack-edge";
 
 export const openNewAbsenceModal: GlobalShortcutLazyHandler<Env> = async ({
   context,

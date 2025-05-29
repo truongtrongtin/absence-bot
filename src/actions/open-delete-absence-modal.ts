@@ -1,13 +1,13 @@
 import type { DeleteAbsencePayload } from "@/blocks/delete-absence-modal";
 import { deleteAbsenceModal } from "@/blocks/delete-absence-modal";
-import { Env } from "@/types";
-import {
+import type { Env } from "@/types";
+import type {
   BlockActionLazyHandler,
   OverflowAction,
   ViewBlockAction,
 } from "slack-edge";
 
-export const showDeleteAbsenceModal: BlockActionLazyHandler<
+export const openDeleteAbsenceModal: BlockActionLazyHandler<
   "overflow",
   Env,
   ViewBlockAction<OverflowAction>

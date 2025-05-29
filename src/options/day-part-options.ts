@@ -1,5 +1,5 @@
 import { DayPart } from "@/types";
-import { PlainTextOption } from "slack-edge";
+import type { PlainTextOption } from "slack-edge";
 
 export const dayPartOptions: PlainTextOption[] = [
   {
@@ -8,7 +8,7 @@ export const dayPartOptions: PlainTextOption[] = [
       text: ":beach_with_umbrella: Full",
       emoji: true,
     },
-    value: DayPart.FULL,
+    value: DayPart.full,
   },
   {
     text: {
@@ -16,7 +16,7 @@ export const dayPartOptions: PlainTextOption[] = [
       text: `:sunny: Morning`,
       emoji: true,
     },
-    value: DayPart.MORNING,
+    value: DayPart.morning,
   },
   {
     text: {
@@ -24,6 +24,6 @@ export const dayPartOptions: PlainTextOption[] = [
       text: ":city_sunset: Afternoon",
       emoji: true,
     },
-    value: DayPart.AFTERNOON,
+    value: DayPart.afternoon,
   },
 ];

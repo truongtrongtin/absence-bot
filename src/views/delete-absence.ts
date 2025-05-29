@@ -4,8 +4,8 @@ import { findUserByEmail, getToday, startOfDay } from "@/helpers";
 import { getAccessToken } from "@/services/get-acess-token";
 import { getEvents } from "@/services/get-events";
 import { getUsers } from "@/services/get-users";
-import { Env } from "@/types";
-import { ViewSubmissionLazyHandler } from "slack-edge";
+import type { Env } from "@/types";
+import type { ViewSubmissionLazyHandler } from "slack-edge";
 
 export const deleteAbsence: ViewSubmissionLazyHandler<Env> = async ({
   payload,

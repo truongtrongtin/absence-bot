@@ -1,7 +1,7 @@
-import { dayPartOptions } from "@/options/day-part-options";
 import { formatDate, getToday } from "@/helpers";
-import { AbsencePayload } from "@/types";
-import { ModalView } from "slack-edge";
+import { dayPartOptions } from "@/options/day-part-options";
+import type { AbsencePayload } from "@/types";
+import type { ModalView } from "slack-edge";
 
 export function newAbsenceModal(absencePayload?: AbsencePayload): ModalView {
   const isSingleMode =

@@ -1,5 +1,5 @@
 import { newSuggestionModal } from "@/blocks/new-suggestion-modal";
-import { MessageShortcutLazyHandler } from "slack-edge";
+import type { MessageShortcutLazyHandler } from "slack-edge";
 
 export const openNewSuggestionModal: MessageShortcutLazyHandler = async ({
   context,

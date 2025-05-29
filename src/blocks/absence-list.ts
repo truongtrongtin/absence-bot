@@ -3,8 +3,8 @@ import {
   getDayPartFromEventSummary,
   subDays,
 } from "@/helpers";
-import { CalendarEvent } from "@/types";
-import { DividerBlock, HomeTabView, SectionBlock } from "slack-edge";
+import type { CalendarEvent } from "@/types";
+import type { DividerBlock, HomeTabView, SectionBlock } from "slack-edge";
 
 export function absenceList({
   absenceEvents,

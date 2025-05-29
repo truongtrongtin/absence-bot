@@ -1,7 +1,7 @@
 import { findUserByEmail } from "@/helpers";
 import { getUsers } from "@/services/get-users";
-import { CFArgs } from "@/types";
-import { IRequest, RequestHandler, StatusError } from "itty-router";
+import type { CFArgs } from "@/types";
+import { StatusError, type IRequest, type RequestHandler } from "itty-router";
 
 type GoogleUser = {
   email: string;

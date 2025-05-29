@@ -1,11 +1,4 @@
-import { CalendarEvent } from "@/types";
-import { ModalView } from "slack-edge";
-
-export type DeleteAbsencePayload = {
-  eventId: CalendarEvent["id"];
-  message_ts: string;
-  timeText: string;
-};
+import type { ModalView } from "slack-edge";
 
 export function leaveBalanceModal({
   remainingDays,

@@ -1,5 +1,5 @@
-import { CFArgs } from "@/types";
-import { IRequest, RequestHandler } from "itty-router";
+import type { CFArgs } from "@/types";
+import type { IRequest, RequestHandler } from "itty-router";
 
 export const getQuotes: RequestHandler<IRequest, CFArgs> = async (
   request,

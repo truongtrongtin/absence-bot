@@ -1,4 +1,4 @@
-import { HomeTabView } from "slack-edge";
+import type { HomeTabView } from "slack-edge";
 
 export function appHome(): HomeTabView {
   return {

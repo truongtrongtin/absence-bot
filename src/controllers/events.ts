@@ -1,6 +1,6 @@
 import { getEvents } from "@/services/get-events";
-import { CFArgs, User } from "@/types";
-import { IRequest, RequestHandler } from "itty-router";
+import type { CFArgs, User } from "@/types";
+import type { IRequest, RequestHandler } from "itty-router";
 
 export const events: RequestHandler<{ user: User } & IRequest, CFArgs> = async (
   request,

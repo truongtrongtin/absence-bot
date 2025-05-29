@@ -1,13 +1,15 @@
-import { CalendarEvent, DayPart, User } from "@/types";
+import type { CalendarEvent, DayPart, User } from "@/types";
 
-export function getDayPartFromEventSummary(summary: CalendarEvent["summary"]) {
-  if (summary.includes(DayPart.MORNING)) {
-    return DayPart.MORNING;
+export function getDayPartFromEventSummary(
+  summary: CalendarEvent["summary"],
+): DayPart {
+  if (summary.includes("morning")) {
+    return "morning";
   }
-  if (summary.includes(DayPart.AFTERNOON)) {
-    return DayPart.AFTERNOON;
+  if (summary.includes("afternoon")) {
+    return "afternoon";
   }
-  return DayPart.FULL;
+  return "full";
 }
 
 export function getUserNameFromEventSummary(summary: CalendarEvent["summary"]) {
@@ -34,7 +36,7 @@ export function generateTimeText({
 
   if (isSameDay(startDate, endDate)) {
     timeText = `on ${niceStartDate}`;
-    if (dayPart !== DayPart.FULL) {
+    if (dayPart !== "full") {
       timeText += ` ${dayPart}`;
     }
   } else {
@@ -64,7 +66,7 @@ export function generateTimeText2({
 
   if (isSameDay(startDate, endDate)) {
     timeText = niceStartDate;
-    if (dayPart !== DayPart.FULL) {
+    if (dayPart !== "full") {
       timeText += ` ${dayPart}`;
     }
   } else {

@@ -1,5 +1,5 @@
-import { CalendarEvent } from "@/types";
-import { ModalView } from "slack-edge";
+import type { CalendarEvent } from "@/types";
+import type { ModalView } from "slack-edge";
 
 export type DeleteAbsencePayload = {
   eventId: CalendarEvent["id"];

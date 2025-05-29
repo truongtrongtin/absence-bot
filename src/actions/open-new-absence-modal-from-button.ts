@@ -1,6 +1,6 @@
 import { newAbsenceModal } from "@/blocks/new-absence-modal";
-import { Env } from "@/types";
-import {
+import type { Env } from "@/types";
+import type {
   BlockActionLazyHandler,
   ButtonAction,
   MessageBlockAction,

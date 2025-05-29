@@ -1,5 +1,5 @@
 import { getAccessToken } from "@/services/get-acess-token";
-import { CalendarEvent, CalendarListResponse, Env } from "@/types";
+import type { CalendarEvent, CalendarListResponse, Env } from "@/types";
 
 export const getEvents = async ({
   query,

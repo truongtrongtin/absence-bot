@@ -1,6 +1,6 @@
 import { getToday } from "@/helpers";
 import { getAccessToken } from "@/services/get-acess-token";
-import { Env, User } from "@/types";
+import type { Env, User } from "@/types";
 
 export const getUsers = async ({ env }: { env: Env }) => {
   const accessToken = await getAccessToken({ env });

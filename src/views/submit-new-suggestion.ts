@@ -4,8 +4,8 @@ import {
   getToday,
   isWeekendInRange,
 } from "@/helpers";
-import { AbsencePayload, DayPart, Env } from "@/types";
-import {
+import type { AbsencePayload, DayPart, Env } from "@/types";
+import type {
   ViewSubmissionAckHandler,
   ViewSubmissionLazyHandler,
 } from "slack-edge";
@@ -94,7 +94,7 @@ export const submitNewSuggestionAck: ViewSubmissionAckHandler<Env> = async ({
     };
   }
 
-  if (!isSingleMode && dayPart !== DayPart.FULL) {
+  if (!isSingleMode && dayPart !== "full") {
     return {
       response_action: "errors",
       errors: {
@@ -129,7 +129,7 @@ export const submitNewSuggestion: ViewSubmissionLazyHandler<Env> = async ({
 
   if (
     endDate < startDate ||
-    (!isSingleMode && dayPart !== DayPart.FULL) ||
+    (!isSingleMode && dayPart !== "full") ||
     isWeekendInRange(startDate, endDate) ||
     startDate > addDays(today, 365) ||
     endDate > addDays(today, 365)

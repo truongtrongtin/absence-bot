@@ -1,4 +1,4 @@
-import { SlackAppLogLevel } from "slack-edge";
+import type { SlackAppLogLevel } from "slack-edge";
 
 export type Env = {
   SLACK_SIGNING_SECRET: string;
@@ -15,11 +15,12 @@ export type Env = {
 };
 export type CFArgs = [Env, ExecutionContext];
 
-export enum DayPart {
-  FULL = "full",
-  MORNING = "morning",
-  AFTERNOON = "afternoon",
-}
+export const DayPart = {
+  full: "full",
+  morning: "morning",
+  afternoon: "afternoon",
+} as const;
+export type DayPart = (typeof DayPart)[keyof typeof DayPart];
 
 export type User = {
   Email: string;

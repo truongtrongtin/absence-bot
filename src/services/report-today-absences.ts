@@ -6,7 +6,7 @@ import {
   startOfDay,
 } from "@/helpers";
 import { getEvents } from "@/services/get-events";
-import { CalendarEvent, Env } from "@/types";
+import type { CalendarEvent, Env } from "@/types";
 import { SlackAPIClient } from "slack-edge";
 
 export const reportTodayAbsences: ExportedHandlerScheduledHandler<Env> = async (

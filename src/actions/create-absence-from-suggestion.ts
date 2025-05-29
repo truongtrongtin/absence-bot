@@ -6,8 +6,8 @@ import {
 } from "@/helpers";
 import { getAccessToken } from "@/services/get-acess-token";
 import { getUsers } from "@/services/get-users";
-import { DayPart, Env } from "@/types";
-import {
+import type { AbsencePayload, Env } from "@/types";
+import type {
   BlockActionLazyHandler,
   ButtonAction,
   MessageBlockAction,
@@ -18,8 +18,13 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   Env,
   MessageBlockAction<ButtonAction>
 > = async ({ context, payload, env }) => {
-  const { targetUserId, startDateString, endDateString, dayPart, reason } =
-    JSON.parse(payload.actions[0].value);
+  const {
+    targetUserId,
+    startDateString,
+    endDateString,
+    dayPart,
+    reason,
+  }: AbsencePayload = JSON.parse(payload.actions[0].value);
   const actionUserId = payload.user.id;
   const [users, { user: slackActionUser }, { user: slackTargetUser }] =
     await Promise.all([
@@ -67,7 +72,7 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
   if (!targetUser) throw Error("target user not found");
 
   const accessToken = await getAccessToken({ env });
-  const dayPartText = dayPart === DayPart.FULL ? "(off)" : `(off ${dayPart})`;
+  const dayPartText = dayPart === "full" ? "(off)" : `(off ${dayPart})`;
   const summary = `${targetUser["Name"]} ${dayPartText}`;
   const timeText = generateTimeText({ startDate, endDate, dayPart });
   const trimmedReason = reason.trim();

@@ -1,7 +1,7 @@
 import { getAccessToken } from "@/services/get-acess-token";
 import { getEvents } from "@/services/get-events";
-import { CFArgs } from "@/types";
-import { IRequest, RequestHandler } from "itty-router";
+import type { CFArgs } from "@/types";
+import type { IRequest, RequestHandler } from "itty-router";
 
 export const migrateEventName: RequestHandler<IRequest, CFArgs> = async (
   request,

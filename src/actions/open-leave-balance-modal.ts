@@ -6,8 +6,8 @@ import {
 } from "@/helpers";
 import { getEvents } from "@/services/get-events";
 import { getUsers } from "@/services/get-users";
-import { Env } from "@/types";
-import {
+import type { Env } from "@/types";
+import type {
   BlockActionLazyHandler,
   ButtonAction,
   ViewBlockAction,

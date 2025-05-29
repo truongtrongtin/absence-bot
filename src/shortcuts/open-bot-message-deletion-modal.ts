@@ -1,4 +1,4 @@
-import { MessageShortcutLazyHandler } from "slack-edge";
+import type { MessageShortcutLazyHandler } from "slack-edge";
 
 export const openBotMessageDeletionModal: MessageShortcutLazyHandler = async ({
   context,
