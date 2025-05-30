@@ -41,18 +41,26 @@ export const openAbsenceList: BlockActionLazyHandler<
   });
   if (!targetUser) return;
 
-  const currentYear = getToday().getFullYear();
+  const year = getToday().getFullYear();
+  const searchString = `${targetUser["Name"]} (off`;
   const query = new URLSearchParams({
-    timeMin: new Date(currentYear, 0, 1).toISOString(),
-    timeMax: new Date(currentYear + 1, 0, 1).toISOString(),
-    q: `${targetUser["Name"]} (off`,
+    timeMin: new Date(year, 0, 1).toISOString(),
+    timeMax: new Date(year + 1, 0, 1).toISOString(),
+    q: searchString,
     orderBy: "startTime",
     singleEvents: "true",
   });
   const absenceEvents = await getEvents({ env, query });
+  // filter again because q params is a full-text search, not reliable for exact summary matching
+  const filteredAbsenceEvents = absenceEvents.filter((event) =>
+    event.summary.startsWith(searchString),
+  );
 
   await context.client.views.publish({
     user_id: payload.user.id,
-    view: absenceList({ absenceEvents, year: currentYear }),
+    view: absenceList({
+      absenceEvents: filteredAbsenceEvents,
+      year,
+    }),
   });
 };

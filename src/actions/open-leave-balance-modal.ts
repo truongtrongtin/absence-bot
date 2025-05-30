@@ -29,20 +29,28 @@ export const openLeaveBalanceModal: BlockActionLazyHandler<
   if (!targetUser) return;
 
   const currentYear = getToday().getFullYear();
+  const searchString = `${targetUser["Name"]} (off`;
   const query = new URLSearchParams({
     timeMin: new Date(currentYear, 0, 1).toISOString(),
     timeMax: new Date(currentYear + 1, 0, 1).toISOString(),
-    q: `${targetUser["Name"]} (off`,
+    q: searchString,
     orderBy: "startTime",
     singleEvents: "true",
   });
   const absenceEvents = await getEvents({ env, query });
   let count = 0;
   for (const event of absenceEvents) {
-    const startDate = new Date(event.start.date);
-    const endDate = new Date(event.end.date);
+    // filter again because q params is a full-text search, not reliable for exact summary matching
+    if (!event.summary.startsWith(searchString)) continue;
     const dayPart = getDayPartFromEventSummary(event.summary);
-    count += dayPart === "full" ? endDate.getDate() - startDate.getDate() : 0.5;
+    count +=
+      dayPart === "full"
+        ? Math.floor(
+            (new Date(event.start.date).getTime() -
+              new Date(event.end.date).getTime()) /
+              (1000 * 60 * 60 * 24),
+          )
+        : 0.5;
   }
 
   await context.client.views.open({

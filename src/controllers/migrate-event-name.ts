@@ -9,15 +9,20 @@ export const migrateEventName: RequestHandler<IRequest, CFArgs> = async (
 ) => {
   const currentName = "Tin";
   const newName = "Tin";
+  const searchString = `${currentName} (off`;
   const query = new URLSearchParams({
-    q: `${currentName} (off`,
+    q: searchString,
     orderBy: "startTime",
     singleEvents: "true",
   });
-  const events = await getEvents({ query, env });
+  const absenceEvents = await getEvents({ query, env });
+  // filter again because q params is a full-text search, not reliable for exact summary matching
+  const filteredAbsenceEvents = absenceEvents.filter((event) =>
+    event.summary.startsWith(searchString),
+  );
   const accessToken = await getAccessToken({ env });
 
-  for (const event of events) {
+  for (const event of filteredAbsenceEvents) {
     const response = await fetch(
       `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events/${event.id}`,
       {
