@@ -1,10 +1,6 @@
 import type { ModalView } from "slack-edge";
 
-export function leaveBalanceModal({
-  remainingDays,
-}: {
-  remainingDays: number;
-}): ModalView {
+export function leaveBalanceModal({ value }: { value?: number }): ModalView {
   return {
     type: "modal",
     title: {
@@ -12,14 +8,25 @@ export function leaveBalanceModal({
       text: "Leave balance",
       emoji: true,
     },
-    blocks: [
-      {
-        type: "header",
-        text: {
-          type: "plain_text",
-          text: remainingDays.toString(),
-        },
-      },
-    ],
+    blocks: value
+      ? [
+          {
+            type: "header",
+            text: {
+              type: "plain_text",
+              text: value.toString(),
+            },
+          },
+        ]
+      : [
+          {
+            type: "section",
+            text: {
+              type: "plain_text",
+              text: "Loading...",
+              emoji: true,
+            },
+          },
+        ],
   };
 }
