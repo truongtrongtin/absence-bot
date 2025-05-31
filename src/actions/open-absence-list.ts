@@ -58,9 +58,6 @@ export const openAbsenceList: BlockActionLazyHandler<
 
   await context.client.views.publish({
     user_id: payload.user.id,
-    view: absenceList({
-      absenceEvents: filteredAbsenceEvents,
-      year,
-    }),
+    view: absenceList({ absenceEvents: filteredAbsenceEvents, year }),
   });
 };
