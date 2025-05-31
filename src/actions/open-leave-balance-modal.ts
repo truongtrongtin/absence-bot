@@ -18,6 +18,10 @@ export const openLeaveBalanceModal: BlockActionLazyHandler<
   Env,
   ViewBlockAction<ButtonAction>
 > = async ({ context, payload, env }) => {
+  const { view } = await context.client.views.open({
+    trigger_id: payload.trigger_id,
+    view: leaveBalanceModal({ value: undefined }),
+  });
   const [users, { user: slackUser }] = await Promise.all([
     getUsers({ env }),
     context.client.users.info({ user: payload.user.id }),
@@ -53,10 +57,11 @@ export const openLeaveBalanceModal: BlockActionLazyHandler<
         : 0.5;
   }
 
-  await context.client.views.open({
-    trigger_id: payload.trigger_id,
+  if (!view) return;
+  await context.client.views.update({
+    view_id: view.id,
     view: leaveBalanceModal({
-      remainingDays: targetUser["Balance"] - count,
+      value: targetUser["Balance"] - count,
     }),
   });
 };
