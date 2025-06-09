@@ -7,7 +7,12 @@ import {
 } from "@/helpers";
 import { getEvents } from "@/services/get-events";
 import type { CalendarEvent, Env } from "@/types";
-import { SlackAPIClient } from "slack-edge";
+import {
+  SlackAPIClient,
+  type BlockElement,
+  type RichTextSection,
+  type RichTextSectionText,
+} from "slack-edge";
 
 export const reportTodayAbsences: ExportedHandlerScheduledHandler<Env> = async (
   controller,
@@ -53,12 +58,16 @@ export const reportTodayAbsences: ExportedHandlerScheduledHandler<Env> = async (
                 elements: [
                   {
                     type: "text",
-                    text: `${userName}: `,
+                    text: `${userName}`,
                   },
-                  {
-                    type: "text",
-                    text: dayPart,
-                  },
+                  ...(dayPart !== "full"
+                    ? ([
+                        {
+                          type: "text",
+                          text: ` (${dayPart})`,
+                        },
+                      ] satisfies RichTextSectionText[])
+                    : []),
                 ],
               };
             }),
