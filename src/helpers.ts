@@ -99,9 +99,9 @@ export function findUserByEmail({
   users: User[];
   email: User["Email"];
 }) {
-  const foundUser = users.find((user) => user["Email"] === email);
-  console.info(foundUser);
-  return foundUser;
+  const sheetUser = users.find((user) => user["Email"] === email);
+  console.info("sheetUser", sheetUser);
+  return sheetUser;
 }
 
 export function getToday() {
