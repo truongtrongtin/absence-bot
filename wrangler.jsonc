@@ -2,11 +2,12 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "absence-bot",
   "main": "src/main.ts",
-  "compatibility_date": "2025-05-29",
+  "compatibility_date": "2025-08-19",
+  "upload_source_maps": true,
   "triggers": {
-    "crons": ["0 0 * * 2-6"]
+    "crons": ["0 0 * * 2-6"],
   },
   "observability": {
-    "enabled": true
-  }
+    "enabled": true,
+  },
 }

@@ -60,7 +60,7 @@ export const listenAndSuggestNewAbsence: EventLazyHandler<
   );
   const translationObject: any = await translationResponse.json();
   const translatedText = translationObject.data.translations[0].translatedText;
-  console.log("translatedText", translatedText);
+  console.info("translatedText", translatedText);
 
   const quote = message.text
     .split("\n")
