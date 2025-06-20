@@ -43,6 +43,9 @@ router.get("/report", reportTodayAbsences);
 router.post("/slack/events", (request, env, context) => {
   async function noopAckHandler() {}
   const app = new SlackApp({ env })
+    .use(async ({ body }) => {
+      console.info(body);
+    })
     .action(
       "open_new_absence_modal",
       noopAckHandler,

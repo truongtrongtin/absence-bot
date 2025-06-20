@@ -150,7 +150,7 @@ export const submitNewAbsence: ViewSubmissionLazyHandler<Env> = async ({
     users,
     email: slackActionUser?.profile?.email || "",
   });
-  if (!targetUser) throw Error("target user not found");
+  if (!targetUser) return;
 
   const accessToken = await getAccessToken({ env });
   const dayPartText = dayPart === "full" ? "(off)" : `(off ${dayPart})`;
