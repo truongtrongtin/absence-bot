@@ -72,7 +72,7 @@ router.post("/slack/events", (request, env, context) => {
       noopAckHandler,
       openNewSuggestionModal,
     )
-    .anyMessage(listenAndSuggestNewAbsence)
+    .event("message", listenAndSuggestNewAbsence)
     .event("app_home_opened", appHomeOpened)
     .viewSubmission(
       "new_suggestion_submit",

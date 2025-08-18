@@ -7,35 +7,43 @@ import {
 } from "@/helpers";
 import type { AbsencePayload, DayPart, Env } from "@/types";
 import * as chrono from "chrono-node/en";
-import type { EventLazyHandler } from "slack-edge";
+import type {
+  EventLazyHandler,
+  FileShareMessageEvent,
+  GenericMessageEvent,
+} from "slack-edge";
+
+export const isRightMessageEvent = (event: {
+  type: string;
+  subtype?: string;
+}): event is GenericMessageEvent | FileShareMessageEvent => {
+  return event.subtype === undefined || event.subtype === "file_share";
+};
 
 export const listenAndSuggestNewAbsence: EventLazyHandler<
   "message",
   Env
 > = async ({ context, payload, env }) => {
-  let message: any;
-  switch (payload.subtype) {
-    case "file_share":
-    case undefined: {
-      message = payload;
-      break;
-    }
-    case "message_changed": {
-      message = payload.message;
-      const previousMessage: any = payload.previous_message;
-      // ignore when delete a message of a thread, which also triggers a message_changed event
-      if (message.text === previousMessage.text) return;
-      break;
-    }
-    default:
-      return;
+  let messagePayload: GenericMessageEvent | FileShareMessageEvent | undefined;
+  if (isRightMessageEvent(payload)) {
+    messagePayload = payload;
   }
+  if (
+    payload.subtype === "message_changed" &&
+    isRightMessageEvent(payload.message) &&
+    isRightMessageEvent(payload.previous_message) &&
+    // handle the case deleting a message also triggers a message_changed event
+    payload.message.text !== payload.previous_message.text
+  ) {
+    messagePayload = payload.message;
+  }
+  if (!messagePayload) return;
 
   const regexp = /(^|\s)(off|nghỉ)([?!.,]|$|\s(?!sớm))/gi;
-  if (!regexp.test(message.text)) return;
+  if (!regexp.test(messagePayload.text)) return;
 
   const translationResponse = await fetch(
-    `https://translation.googleapis.com/language/translate/v2`,
+    "https://translation.googleapis.com/language/translate/v2",
     {
       method: "POST",
       headers: {
@@ -45,7 +53,7 @@ export const listenAndSuggestNewAbsence: EventLazyHandler<
       body: JSON.stringify({
         source: "vi",
         target: "en",
-        q: message.text
+        q: messagePayload.text
           ?.replaceAll(/t2|thứ 2/gi, "monday")
           ?.replaceAll(/t3|thứ 3/gi, "tuesday")
           ?.replaceAll(/t4|thứ 4/gi, "wednesdays")
@@ -62,7 +70,7 @@ export const listenAndSuggestNewAbsence: EventLazyHandler<
   const translatedText = translationObject.data.translations[0].translatedText;
   console.info("translatedText", translatedText);
 
-  const quote = message.text
+  const quote = messagePayload.text
     .split("\n")
     .map((text: string) => `>${text}`)
     .join("\n");
@@ -146,17 +154,17 @@ export const listenAndSuggestNewAbsence: EventLazyHandler<
     if (!isSingleMode && dayPart !== "full") return;
 
     const timeText = generateTimeText({ startDate, endDate, dayPart });
-    const text = `<@${message.user}>, are you going to be absent *${timeText}*?`;
+    const text = `<@${messagePayload.user}>, are you going to be absent *${timeText}*?`;
     const absencePayload: AbsencePayload = {
-      targetUserId: message.user,
+      targetUserId: messagePayload.user,
       startDateString,
       endDateString,
       dayPart,
-      reason: message.text,
+      reason: messagePayload.text,
     };
 
     await context.say({
-      thread_ts: message.ts,
+      thread_ts: messagePayload.ts,
       blocks: [
         {
           type: "section",
