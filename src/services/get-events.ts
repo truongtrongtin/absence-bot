@@ -16,7 +16,7 @@ export const getEvents = async ({
       `https://www.googleapis.com/calendar/v3/calendars/${env.GOOGLE_CALENDAR_ID}/events?${query}`,
       { headers: { Authorization: `Bearer ${accessToken}` } },
     );
-    const data = <CalendarListResponse>await response.json();
+    const data = await response.json<CalendarListResponse>();
     if (!response.ok) throw data;
     events = events.concat(data.items);
     if (data.nextPageToken) {

@@ -14,7 +14,7 @@ export async function getAccessToken({ env }: { env: Env }) {
       refresh_token: env.GOOGLE_REFRESH_TOKEN,
     }),
   });
-  const tokenObject = <TokenObject>await response.json();
+  const tokenObject = await response.json<TokenObject>();
   if (!response.ok) throw tokenObject;
   return tokenObject.access_token;
 }

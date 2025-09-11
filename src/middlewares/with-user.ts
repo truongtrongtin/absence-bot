@@ -20,7 +20,7 @@ export const withUser: RequestHandler<IRequest, CFArgs> = async (
     "https://www.googleapis.com/oauth2/v3/userinfo",
     { headers: { Authorization: `Bearer ${clientAccessToken}` } },
   );
-  const googleUser = <GoogleUser>await response.json();
+  const googleUser = await response.json<GoogleUser>();
   console.info(googleUser.name);
   if (!response.ok) throw new StatusError(response.status, googleUser);
   const users = await getUsers({ env });
