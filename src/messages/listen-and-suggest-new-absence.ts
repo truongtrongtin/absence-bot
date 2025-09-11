@@ -1,8 +1,9 @@
 import {
   addDays,
-  formatDate,
+  formatDateInTimezone,
   generateTimeText,
-  getToday,
+  get3pmInTimezone,
+  getStartOfDayInTimezone,
   isWeekendInRange,
 } from "@/helpers";
 import type { AbsencePayload, DayPart, Env } from "@/types";
@@ -75,25 +76,21 @@ export const listenAndSuggestNewAbsence: EventLazyHandler<
     .map((text: string) => `>${text}`)
     .join("\n");
 
-  const ranges = chrono.parse(translatedText);
+  const now = new Date();
+  const ranges = chrono.parse(translatedText, getStartOfDayInTimezone(now));
 
-  const today = getToday();
   const map = new Map();
   for (const range of ranges) {
     const startDate = range.start.date();
     const endDate = range.end ? range.end.date() : startDate;
 
     // ignore duplicated range
-    const hash =
-      startDate.toDateString() +
-      startDate.getHours() +
-      endDate.toDateString() +
-      endDate.getHours();
+    const hash = startDate.getTime() + endDate.getTime();
     if (map.has(hash)) return;
     map.set(hash, true);
 
     if (!startDate) return;
-    if (new Date(new Date(startDate).setHours(15, 0, 0, 0)) < today) {
+    if (now > get3pmInTimezone(new Date(startDate))) {
       return;
     }
     if (endDate < startDate) return;
@@ -115,7 +112,7 @@ export const listenAndSuggestNewAbsence: EventLazyHandler<
       // });
       return;
     }
-    if (startDate > addDays(today, 365)) {
+    if (startDate > addDays(now, 365)) {
       // const failureText = "No more than 1 year from now!";
       // await context.say({
       //   thread_ts: message.ts,
@@ -148,8 +145,8 @@ export const listenAndSuggestNewAbsence: EventLazyHandler<
       dayPart = "afternoon";
     }
 
-    const startDateString = formatDate(startDate);
-    const endDateString = formatDate(endDate);
+    const startDateString = formatDateInTimezone(startDate);
+    const endDateString = formatDateInTimezone(endDate);
     const isSingleMode = startDateString === endDateString;
     if (!isSingleMode && dayPart !== "full") return;
 

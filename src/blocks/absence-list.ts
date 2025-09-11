@@ -1,7 +1,7 @@
 import {
   generateTimeText2,
   getDayPartFromEventSummary,
-  getToday,
+  getEndOfDayInTimezone,
   subDays,
 } from "@/helpers";
 import { getYearOptions } from "@/options/year-options";
@@ -15,7 +15,6 @@ export function absenceList({
   absenceEvents: CalendarEvent[];
   year: number;
 }): HomeTabView {
-  const today = getToday();
   const yearOptions = getYearOptions();
   const yearOption = yearOptions.find((o) => o.value === year?.toString());
   return {
@@ -82,7 +81,7 @@ export function absenceList({
                   verbatim: true,
                 },
                 accessory:
-                  today < new Date(event.end.date)
+                  getEndOfDayInTimezone(new Date()) < new Date(event.end.date)
                     ? {
                         type: "overflow",
                         action_id: "show_delete_absence_modal",

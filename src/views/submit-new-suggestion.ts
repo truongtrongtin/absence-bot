@@ -1,9 +1,4 @@
-import {
-  addDays,
-  generateTimeText,
-  getToday,
-  isWeekendInRange,
-} from "@/helpers";
+import { addDays, generateTimeText, isWeekendInRange } from "@/helpers";
 import type { AbsencePayload, DayPart, Env } from "@/types";
 import type {
   ViewSubmissionAckHandler,
@@ -37,7 +32,7 @@ export const submitNewSuggestionAck: ViewSubmissionAckHandler<Env> = async ({
   const isSingleMode = startDateString === endDateString;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-  const today = getToday();
+  const now = new Date();
 
   if (isWeekendInRange(startDate, endDate)) {
     if (isSingleMode) {
@@ -72,7 +67,7 @@ export const submitNewSuggestionAck: ViewSubmissionAckHandler<Env> = async ({
     };
   }
 
-  if (startDate > addDays(today, 365)) {
+  if (startDate > addDays(now, 365)) {
     return {
       response_action: "errors",
       errors: {
@@ -83,7 +78,7 @@ export const submitNewSuggestionAck: ViewSubmissionAckHandler<Env> = async ({
     };
   }
 
-  if (endDate > addDays(today, 365)) {
+  if (endDate > addDays(now, 365)) {
     return {
       response_action: "errors",
       errors: {
@@ -125,14 +120,14 @@ export const submitNewSuggestion: ViewSubmissionLazyHandler<Env> = async ({
   const isSingleMode = startDateString === endDateString;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-  const today = getToday();
+  const now = new Date();
 
   if (
     endDate < startDate ||
     (!isSingleMode && dayPart !== "full") ||
     isWeekendInRange(startDate, endDate) ||
-    startDate > addDays(today, 365) ||
-    endDate > addDays(today, 365)
+    startDate > addDays(now, 365) ||
+    endDate > addDays(now, 365)
   ) {
     return;
   }

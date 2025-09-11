@@ -1,5 +1,10 @@
 import { absenceList } from "@/blocks/absence-list";
-import { findUserByEmail, getToday } from "@/helpers";
+import {
+  findUserByEmail,
+  getEndOfYearInTimezone,
+  getStartOfYearInTimezone,
+  getYearInTimezone,
+} from "@/helpers";
 import { getEvents } from "@/services/get-events";
 import { getUsers } from "@/services/get-users";
 import type { Env } from "@/types";
@@ -41,11 +46,10 @@ export const openAbsenceList: BlockActionLazyHandler<
   });
   if (!targetUser) return;
 
-  const year = getToday().getFullYear();
   const searchString = `${targetUser["Name"]} (off`;
   const query = new URLSearchParams({
-    timeMin: new Date(year, 0, 1).toISOString(),
-    timeMax: new Date(year + 1, 0, 1).toISOString(),
+    timeMin: getStartOfYearInTimezone(new Date()).toISOString(),
+    timeMax: getEndOfYearInTimezone(new Date()).toISOString(),
     q: searchString,
     orderBy: "startTime",
     singleEvents: "true",
@@ -58,6 +62,9 @@ export const openAbsenceList: BlockActionLazyHandler<
 
   await context.client.views.publish({
     user_id: payload.user.id,
-    view: absenceList({ absenceEvents: filteredAbsenceEvents, year }),
+    view: absenceList({
+      absenceEvents: filteredAbsenceEvents,
+      year: getYearInTimezone(new Date()),
+    }),
   });
 };

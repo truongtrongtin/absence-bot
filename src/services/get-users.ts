@@ -1,10 +1,10 @@
-import { getToday } from "@/helpers";
+import { getYearInTimezone } from "@/helpers";
 import { getAccessToken } from "@/services/get-acess-token";
 import type { Env, User } from "@/types";
 
 export const getUsers = async ({ env }: { env: Env }) => {
   const accessToken = await getAccessToken({ env });
-  const sheetName = getToday().getFullYear().toString();
+  const sheetName = getYearInTimezone(new Date()).toString();
   const query = new URLSearchParams({
     valueRenderOption: "UNFORMATTED_VALUE",
     dateTimeRenderOption: "FORMATTED_STRING",

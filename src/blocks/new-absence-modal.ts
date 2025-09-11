@@ -1,9 +1,10 @@
-import { formatDate, getToday } from "@/helpers";
 import { dayPartOptions } from "@/options/day-part-options";
 import type { AbsencePayload } from "@/types";
 import type { ModalView } from "slack-edge";
 
-export function newAbsenceModal(absencePayload?: AbsencePayload): ModalView {
+export function newAbsenceModal(
+  absencePayload?: Partial<AbsencePayload>,
+): ModalView {
   const isSingleMode =
     absencePayload?.startDateString === absencePayload?.endDateString;
 
@@ -34,8 +35,7 @@ export function newAbsenceModal(absencePayload?: AbsencePayload): ModalView {
           type: "datepicker",
           action_id: "start_date_action",
           focus_on_load: true,
-          initial_date:
-            absencePayload?.startDateString || formatDate(getToday()),
+          initial_date: absencePayload?.startDateString,
         },
         label: {
           type: "plain_text",

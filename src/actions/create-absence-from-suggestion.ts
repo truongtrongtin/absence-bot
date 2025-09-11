@@ -1,7 +1,7 @@
 import {
   addDays,
   findUserByEmail,
-  formatDate,
+  formatDateInTimezone,
   generateTimeText,
 } from "@/helpers";
 import { getAccessToken } from "@/services/get-acess-token";
@@ -97,7 +97,7 @@ export const createAbsenceFromSuggestion: BlockActionLazyHandler<
           date: startDateString,
         },
         end: {
-          date: formatDate(addDays(endDate, 1)),
+          date: formatDateInTimezone(addDays(endDate, 1)),
         },
         summary,
         ...(trimmedReason ? { description: trimmedReason } : {}),
