@@ -7,11 +7,13 @@
     "moduleResolution": "bundler",
     "noEmit": true,
     "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
     "strict": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },
     "types": ["./worker-configuration.d.ts"]
-  }
+  },
+  "include": ["src", "test"]
 }
