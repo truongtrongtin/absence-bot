@@ -1,9 +1,8 @@
 import {
   addDays,
   findUserByEmail,
-  formatDate,
+  formatDateInTimezone,
   generateTimeText,
-  getToday,
   isWeekendInRange,
 } from "@/helpers";
 import { getAccessToken } from "@/services/get-acess-token";
@@ -39,7 +38,7 @@ export const submitNewAbsenceAck: ViewSubmissionAckHandler<Env> = async ({
   const isSingleMode = startDateString === endDateString;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-  const today = getToday();
+  const now = new Date();
 
   if (isWeekendInRange(startDate, endDate)) {
     if (isSingleMode) {
@@ -74,7 +73,7 @@ export const submitNewAbsenceAck: ViewSubmissionAckHandler<Env> = async ({
     };
   }
 
-  if (startDate > addDays(today, 365)) {
+  if (startDate > addDays(now, 365)) {
     return {
       response_action: "errors",
       errors: {
@@ -85,7 +84,7 @@ export const submitNewAbsenceAck: ViewSubmissionAckHandler<Env> = async ({
     };
   }
 
-  if (endDate > addDays(today, 365)) {
+  if (endDate > addDays(now, 365)) {
     return {
       response_action: "errors",
       errors: {
@@ -129,14 +128,14 @@ export const submitNewAbsence: ViewSubmissionLazyHandler<Env> = async ({
   const isSingleMode = startDateString === endDateString;
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-  const today = getToday();
+  const now = new Date();
 
   if (
     endDate < startDate ||
     (!isSingleMode && dayPart !== "full") ||
     isWeekendInRange(startDate, endDate) ||
-    startDate > addDays(today, 365) ||
-    endDate > addDays(today, 365)
+    startDate > addDays(now, 365) ||
+    endDate > addDays(now, 365)
   ) {
     return;
   }
@@ -178,7 +177,7 @@ export const submitNewAbsence: ViewSubmissionLazyHandler<Env> = async ({
           date: startDateString,
         },
         end: {
-          date: formatDate(addDays(endDate, 1)),
+          date: formatDateInTimezone(addDays(endDate, 1)),
         },
         summary,
         ...(trimmedReason ? { description: trimmedReason } : {}),

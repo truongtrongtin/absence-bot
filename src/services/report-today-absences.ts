@@ -1,9 +1,8 @@
 import {
-  endOfDay,
   getDayPartFromEventSummary,
-  getToday,
+  getEndOfDayInTimezone,
+  getStartOfDayInTimezone,
   getUserNameFromEventSummary,
-  startOfDay,
 } from "@/helpers";
 import { getEvents } from "@/services/get-events";
 import type { CalendarEvent, Env } from "@/types";
@@ -13,12 +12,10 @@ export const reportTodayAbsences: ExportedHandlerScheduledHandler<Env> = async (
   controller,
   env,
 ) => {
-  const today = getToday();
-
   // Get today's absense events
   const query = new URLSearchParams({
-    timeMin: startOfDay(today).toISOString(),
-    timeMax: endOfDay(today).toISOString(),
+    timeMin: getStartOfDayInTimezone(new Date()).toISOString(),
+    timeMax: getEndOfDayInTimezone(new Date()).toISOString(),
     q: "off",
   });
   const absenceEvents = await getEvents({ env, query });

@@ -2,7 +2,8 @@ import { leaveBalanceModal } from "@/blocks/leave-balance-modal";
 import {
   findUserByEmail,
   getDayPartFromEventSummary,
-  getToday,
+  getEndOfYearInTimezone,
+  getStartOfYearInTimezone,
 } from "@/helpers";
 import { getEvents } from "@/services/get-events";
 import { getUsers } from "@/services/get-users";
@@ -32,11 +33,10 @@ export const openLeaveBalanceModal: BlockActionLazyHandler<
   });
   if (!targetUser) return;
 
-  const currentYear = getToday().getFullYear();
   const searchString = `${targetUser["Name"]} (off`;
   const query = new URLSearchParams({
-    timeMin: new Date(currentYear, 0, 1).toISOString(),
-    timeMax: new Date(currentYear + 1, 0, 1).toISOString(),
+    timeMin: getStartOfYearInTimezone(new Date()).toISOString(),
+    timeMax: getEndOfYearInTimezone(new Date()).toISOString(),
     q: searchString,
     orderBy: "startTime",
     singleEvents: "true",

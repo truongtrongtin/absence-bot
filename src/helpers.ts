@@ -1,4 +1,5 @@
 import type { CalendarEvent, DayPart, User } from "@/types";
+const defaultTimeZone = "Asia/Bangkok";
 
 export function getDayPartFromEventSummary(
   summary: CalendarEvent["summary"],
@@ -104,29 +105,6 @@ export function findUserByEmail({
   return sheetUser;
 }
 
-export function getToday() {
-  const today = new Date();
-  // Asia/Ho_Chi_Minh
-  today.setHours(today.getHours() + 7);
-  return today;
-}
-
-export function startOfDay(date: Date) {
-  const newDate = new Date(date);
-  newDate.setHours(7, 0, 0, 0);
-  return newDate;
-}
-
-export function endOfDay(date: Date) {
-  const newDate = new Date(date);
-  newDate.setHours(16, 59, 59, 999);
-  return newDate;
-}
-
-export function formatDate(date: Date) {
-  return date.toISOString().split("T")[0];
-}
-
 export function isSameDay(date1: Date, date2: Date) {
   return (
     date1.getDate() === date2.getDate() &&
@@ -142,4 +120,101 @@ export function addDays(date: Date, amount: number) {
 
 export function subDays(date: Date, amount: number) {
   return addDays(date, -amount);
+}
+
+export function formatDateInTimezone(
+  date: Date,
+  timeZone: string = defaultTimeZone,
+): string {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone,
+  });
+  return formatter.format(date);
+}
+
+export function getYearInTimezone(
+  date: Date,
+  timeZone: string = defaultTimeZone,
+): number {
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    timeZone,
+  });
+  return Number(formatter.format(date));
+}
+
+export function getStartOfYearInTimezone(
+  date: Date,
+  timeZone: string = defaultTimeZone,
+): Date {
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    timeZone,
+  });
+  const year = Number(formatter.format(date));
+  return new Date(year, 0, 1);
+}
+
+export function getEndOfYearInTimezone(
+  date: Date,
+  timeZone: string = defaultTimeZone,
+): Date {
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    timeZone,
+  });
+  const year = Number(formatter.format(date));
+  return new Date(year, 11, 31, 23, 59, 59, 999);
+}
+
+export function getStartOfDayInTimezone(
+  date: Date,
+  timeZone: string = defaultTimeZone,
+): Date {
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    timeZone,
+  });
+  const formattedDateString = formatter.format(date);
+  return new Date(formattedDateString);
+}
+
+export function getEndOfDayInTimezone(
+  date: Date,
+  timeZone: string = defaultTimeZone,
+): Date {
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    timeZone,
+  });
+  const formattedDateString = formatter.format(date);
+  const endOfDay = new Date(formattedDateString);
+  endOfDay.setHours(23, 59, 59, 999);
+  return endOfDay;
+}
+
+export function get3pmInTimezone(
+  date: Date,
+  timeZone: string = defaultTimeZone,
+): Date {
+  const localDateAt3pm = new Date(date);
+  localDateAt3pm.setHours(15, 0, 0, 0);
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    timeZone,
+  });
+  const formattedDateString = formatter.format(localDateAt3pm);
+  return new Date(formattedDateString);
 }
