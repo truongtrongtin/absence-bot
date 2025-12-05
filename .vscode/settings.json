@@ -9,5 +9,4 @@
     "worker-configuration.d.ts": true
   },
   "typescript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.preferences.preferTypeOnlyAutoImports": true
 }

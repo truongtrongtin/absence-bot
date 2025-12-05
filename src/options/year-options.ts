@@ -1,5 +1,5 @@
 import { getYearInTimezone } from "@/helpers";
-import { PlainTextOption } from "slack-edge";
+import { type PlainTextOption } from "slack-edge";
 
 export function getYearOptions(): PlainTextOption[] {
   const currentYear = getYearInTimezone(new Date());

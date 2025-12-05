@@ -6,6 +6,7 @@
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "noEmit": true,
+    "verbatimModuleSyntax": true,
     "strict": true,
     "baseUrl": ".",
     "paths": {
