@@ -2,7 +2,6 @@ import { leaveBalanceModal } from "@/blocks/leave-balance-modal";
 import {
   findUserByEmail,
   getDayPartFromEventSummary,
-  getEndOfYearInTimezone,
   getStartOfYearInTimezone,
 } from "@/helpers";
 import { getEvents } from "@/services/get-events";
@@ -36,7 +35,6 @@ export const openLeaveBalanceModal: BlockActionLazyHandler<
   const searchString = `${targetUser["Name"]} (off`;
   const query = new URLSearchParams({
     timeMin: getStartOfYearInTimezone(new Date()).toISOString(),
-    timeMax: getEndOfYearInTimezone(new Date()).toISOString(),
     q: searchString,
     orderBy: "startTime",
     singleEvents: "true",
