@@ -1,3 +1,4 @@
+import { noPermissionModal } from "@/blocks/no-permission-modal";
 import {
   addDays,
   findUserByEmail,
@@ -149,7 +150,13 @@ export const submitNewAbsence: ViewSubmissionLazyHandler<Env> = async ({
     users,
     email: slackActionUser?.profile?.email || "",
   });
-  if (!targetUser) return;
+  if (!targetUser) {
+    await context.client.views.open({
+      trigger_id: payload.trigger_id,
+      view: noPermissionModal(),
+    });
+    return;
+  }
 
   const accessToken = await getAccessToken({ env });
   const dayPartText = dayPart === "full" ? "(off)" : `(off ${dayPart})`;

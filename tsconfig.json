@@ -9,9 +9,8 @@
     "verbatimModuleSyntax": true,
     "erasableSyntaxOnly": true,
     "strict": true,
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
     "types": ["./worker-configuration.d.ts"]
   },
