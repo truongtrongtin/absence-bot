@@ -67,7 +67,9 @@ export const listenAndSuggestNewAbsence: EventLazyHandler<
       }),
     },
   );
-  const translationObject: any = await translationResponse.json();
+  const translationObject: {
+    data: { translations: { translatedText: string }[] };
+  } = await translationResponse.json();
   const translatedText = translationObject.data.translations[0].translatedText;
   console.info("translatedText", translatedText);
 

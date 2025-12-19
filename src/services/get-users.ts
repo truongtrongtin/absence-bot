@@ -13,8 +13,12 @@ export const getUsers = async ({ env }: { env: Env }) => {
     `https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}/values/${sheetName}?${query}`,
     { headers: { Authorization: `Bearer ${accessToken}` } },
   );
-  const sheetValues: any = await response.json();
-  if (!response.ok) throw sheetValues.error;
+  const sheetValues: { values: string[][] } & { error: string } =
+    await response.json();
+  if (!response.ok) {
+    console.error(sheetValues.error);
+    return [];
+  }
   const [header, ...rows] = sheetValues.values;
   const result: Record<string, string>[] = [];
   for (const rowValues of rows) {

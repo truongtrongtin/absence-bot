@@ -31,35 +31,38 @@ export const openLeaveBalanceModal: BlockActionLazyHandler<
     users,
     email: slackUser?.profile?.email || "",
   });
-  if (!targetUser) return;
 
-  const searchString = `${targetUser["Name"]} (off`;
-  const query = new URLSearchParams({
-    timeMin: getStartOfYearInTimezone(new Date()).toISOString(),
-    timeMax: getEndOfYearInTimezone(new Date()).toISOString(),
-    q: searchString,
-    orderBy: "startTime",
-    singleEvents: "true",
-  });
-  const absenceEvents = await getEvents({ env, query });
-  let count = 0;
-  for (const event of absenceEvents) {
-    // filter again because q params is a full-text search, not reliable for exact summary matching
-    if (!event.summary.startsWith(searchString)) continue;
-    const dayPart = getDayPartFromEventSummary(event.summary);
-    count +=
-      dayPart === "full"
-        ? (new Date(event.end.date).getTime() -
-            new Date(event.start.date).getTime()) /
-          (1000 * 60 * 60 * 24)
-        : 0.5;
+  let balance = 0;
+  if (targetUser) {
+    const searchString = `${targetUser["Name"]} (off`;
+    const query = new URLSearchParams({
+      timeMin: getStartOfYearInTimezone(new Date()).toISOString(),
+      timeMax: getEndOfYearInTimezone(new Date()).toISOString(),
+      q: searchString,
+      orderBy: "startTime",
+      singleEvents: "true",
+    });
+    const absenceEvents = await getEvents({ env, query });
+    let count = 0;
+    for (const event of absenceEvents) {
+      // filter again because q params is a full-text search, not reliable for exact summary matching
+      if (!event.summary.startsWith(searchString)) continue;
+      const dayPart = getDayPartFromEventSummary(event.summary);
+      count +=
+        dayPart === "full"
+          ? (new Date(event.end.date).getTime() -
+              new Date(event.start.date).getTime()) /
+            (1000 * 60 * 60 * 24)
+          : 0.5;
+    }
+    balance = targetUser["Balance"] - count;
   }
 
   if (!view) return;
   await context.client.views.update({
     view_id: view.id,
     view: leaveBalanceModal({
-      value: targetUser!["Balance"] - count,
+      value: balance,
     }),
   });
 };

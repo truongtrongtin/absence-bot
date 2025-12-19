@@ -7,7 +7,7 @@ import {
 } from "@/helpers";
 import { getEvents } from "@/services/get-events";
 import { getUsers } from "@/services/get-users";
-import type { Env } from "@/types";
+import type { CalendarEvent, Env } from "@/types";
 import type {
   BlockActionLazyHandler,
   ButtonAction,
@@ -44,27 +44,25 @@ export const openAbsenceList: BlockActionLazyHandler<
     users,
     email: slackUser?.profile?.email || "",
   });
-  if (!targetUser) return;
 
-  const searchString = `${targetUser["Name"]} (off`;
-  const query = new URLSearchParams({
-    timeMin: getStartOfYearInTimezone(new Date()).toISOString(),
-    timeMax: getEndOfYearInTimezone(new Date()).toISOString(),
-    q: searchString,
-    orderBy: "startTime",
-    singleEvents: "true",
-  });
-  const absenceEvents = await getEvents({ env, query });
-  // filter again because q params is a full-text search, not reliable for exact summary matching
-  const filteredAbsenceEvents = absenceEvents.filter((event) =>
-    event.summary.startsWith(searchString),
-  );
-
+  let absenceEvents: CalendarEvent[] = [];
+  if (targetUser) {
+    const searchString = `${targetUser["Name"]} (off`;
+    const query = new URLSearchParams({
+      timeMin: getStartOfYearInTimezone(new Date()).toISOString(),
+      timeMax: getEndOfYearInTimezone(new Date()).toISOString(),
+      q: searchString,
+      orderBy: "startTime",
+      singleEvents: "true",
+    });
+    const events = await getEvents({ env, query });
+    // filter again because q params is a full-text search, not reliable for exact summary matching
+    absenceEvents = events.filter((event) =>
+      event.summary.startsWith(searchString),
+    );
+  }
   await context.client.views.publish({
     user_id: payload.user.id,
-    view: absenceList({
-      absenceEvents: filteredAbsenceEvents,
-      year: getYearInTimezone(new Date()),
-    }),
+    view: absenceList({ absenceEvents, year: getYearInTimezone(new Date()) }),
   });
 };

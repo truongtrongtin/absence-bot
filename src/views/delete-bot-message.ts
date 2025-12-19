@@ -1,3 +1,4 @@
+import { noPermissionModal } from "@/blocks/no-permission-modal";
 import { findUserByEmail } from "@/helpers";
 import { getUsers } from "@/services/get-users";
 import type { Env } from "@/types";
@@ -20,26 +21,7 @@ export const deleteBotMessage: ViewSubmissionLazyHandler<Env> = async ({
   if (!actionUser?.["Admin"]) {
     await context.client.views.open({
       trigger_id: payload.trigger_id,
-      view: {
-        type: "modal",
-        title: {
-          type: "plain_text",
-          text: "Unauthorized!",
-        },
-        close: {
-          type: "plain_text",
-          text: "Close",
-        },
-        blocks: [
-          {
-            type: "section",
-            text: {
-              type: "plain_text",
-              text: "You are not authorized to perform this action!",
-            },
-          },
-        ],
-      },
+      view: noPermissionModal(),
     });
     return;
   }

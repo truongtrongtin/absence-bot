@@ -1,3 +1,4 @@
+import { getYearInTimezone } from "@/helpers";
 import type { ModalView } from "slack-edge";
 
 export function leaveBalanceModal({ value }: { value?: number }): ModalView {
@@ -5,28 +6,29 @@ export function leaveBalanceModal({ value }: { value?: number }): ModalView {
     type: "modal",
     title: {
       type: "plain_text",
-      text: "Leave balance",
+      text: `Leave balance ${getYearInTimezone(new Date())}`,
       emoji: true,
     },
-    blocks: value
-      ? [
-          {
-            type: "header",
-            text: {
-              type: "plain_text",
-              text: value.toString(),
+    blocks:
+      value !== undefined
+        ? [
+            {
+              type: "header",
+              text: {
+                type: "plain_text",
+                text: value.toString(),
+              },
             },
-          },
-        ]
-      : [
-          {
-            type: "section",
-            text: {
-              type: "plain_text",
-              text: "Loading...",
-              emoji: true,
+          ]
+        : [
+            {
+              type: "section",
+              text: {
+                type: "plain_text",
+                text: "Loading...",
+                emoji: true,
+              },
             },
-          },
-        ],
+          ],
   };
 }

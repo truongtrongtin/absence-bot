@@ -8,5 +8,8 @@
   "search.exclude": {
     "worker-configuration.d.ts": true
   },
-  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always"
+  },
+  "typescript.preferences.importModuleSpecifier": "non-relative"
 }
