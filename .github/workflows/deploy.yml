@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          wranglerVersion: "4.54.0"
+          wranglerVersion: "4.85.0"
           secrets: |
             SLACK_SIGNING_SECRET
             SLACK_BOT_TOKEN

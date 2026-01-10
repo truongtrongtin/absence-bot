@@ -12,21 +12,21 @@
   },
   "dependencies": {
     "chrono-node": "2.9.0",
-    "itty-router": "5.0.22",
-    "slack-edge": "1.3.12"
+    "itty-router": "5.0.23",
+    "slack-edge": "1.3.16"
   },
   "devDependencies": {
-    "@commitlint/cli": "20.2.0",
-    "@commitlint/config-conventional": "20.2.0",
-    "@eslint/js": "9.39.2",
-    "eslint": "9.39.2",
+    "@commitlint/cli": "20.5.2",
+    "@commitlint/config-conventional": "20.5.0",
+    "@eslint/js": "10.0.1",
+    "eslint": "10.2.1",
     "eslint-config-prettier": "10.1.8",
     "husky": "9.1.7",
-    "lint-staged": "16.2.7",
-    "prettier": "3.7.4",
-    "typescript": "5.9.3",
-    "typescript-eslint": "8.49.0",
-    "vitest": "4.0.15",
-    "wrangler": "4.54.0"
+    "lint-staged": "16.4.0",
+    "prettier": "3.8.3",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.59.0",
+    "vitest": "4.1.5",
+    "wrangler": "4.85.0"
   }
 }
