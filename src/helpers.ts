@@ -33,7 +33,7 @@ export function generateTimeText({
   });
   const niceStartDate = formatter.format(startDate);
   const niceEndDate = formatter.format(endDate);
-  let timeText = "";
+  let timeText: string;
 
   if (isSameDay(startDate, endDate)) {
     timeText = `on ${niceStartDate}`;
@@ -63,7 +63,7 @@ export function generateTimeText2({
   });
   const niceStartDate = formatter.format(startDate);
   const niceEndDate = formatter.format(endDate);
-  let timeText = "";
+  let timeText: string;
 
   if (isSameDay(startDate, endDate)) {
     timeText = niceStartDate;
@@ -78,14 +78,12 @@ export function generateTimeText2({
 }
 
 export function isWeekendInRange(startDate: Date, endDate: Date) {
-  let isWeekend = false;
   const start = new Date(startDate);
   const end = new Date(endDate);
 
   while (start <= end) {
     const day = start.getDay();
-    isWeekend = day === 6 || day === 0;
-    if (isWeekend) {
+    if (day === 6 || day === 0) {
       return true;
     }
     start.setDate(start.getDate() + 1);
