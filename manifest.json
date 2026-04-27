@@ -38,6 +38,7 @@
   "oauth_config": {
     "scopes": {
       "bot": [
+        "groups:history",
         "channels:history",
         "chat:write",
         "commands",
@@ -49,7 +50,7 @@
   "settings": {
     "event_subscriptions": {
       "request_url": "https://example.com/slack/events",
-      "bot_events": ["app_home_opened"]
+      "bot_events": ["app_home_opened", "message.channels", "message.groups"]
     },
     "interactivity": {
       "is_enabled": true,
