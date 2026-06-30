@@ -18,7 +18,9 @@ export const withUser: RequestHandler<IRequest, CFArgs> = async (
   }
   const response = await fetch(
     "https://www.googleapis.com/oauth2/v3/userinfo",
-    { headers: { Authorization: `Bearer ${clientAccessToken}` } },
+    {
+      headers: { Authorization: `Bearer ${clientAccessToken}` },
+    },
   );
   const googleUser = await response.json<GoogleUser>();
   console.info(googleUser.name);

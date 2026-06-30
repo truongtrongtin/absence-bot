@@ -8,8 +8,11 @@
   "search.exclude": {
     "worker-configuration.d.ts": true
   },
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "oxc.fmt.configPath": ".oxfmtrc.json",
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll": "always"
+    "source.fixAll.oxc": "always"
   },
   "typescript.preferences.importModuleSpecifier": "non-relative"
 }

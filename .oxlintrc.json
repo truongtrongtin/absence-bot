@@ -1,0 +1,7 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "vitest", "typescript", "oxc", "unicorn", "import"],
+  "rules": {
+    "typescript/no-explicit-any": "warn"
+  }
+}
